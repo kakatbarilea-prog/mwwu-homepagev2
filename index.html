@@ -1,4 +1,4 @@
-<!DOCTYPE html>  
+<!DOCTYPE html> 
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -17,8 +17,6 @@
   a{color:inherit;text-decoration:none}
   img,video{max-width:100%;height:auto;display:block}
   .container{max-width:1200px;margin:0 auto;padding:0 16px}
-  /* Make header full-width */
-  header .container{max-width:none}
   .btn{display:inline-flex;align-items:center;justify-content:center;height:42px;padding:0 16px;border-radius:999px;border:1px solid transparent;font-weight:800;font-size:15px;cursor:pointer;transition:transform .04s ease, box-shadow .2s ease, background .2s ease, filter .2s ease;user-select:none;position:relative;overflow:hidden}
   .btn:active{transform:translateY(1px)}
   .btn.primary{background:linear-gradient(180deg,var(--brand),var(--brand-2));color:#fff;box-shadow:0 12px 28px rgba(128,0,128,.35)}
@@ -34,12 +32,12 @@
   .announce a{color:#fff;text-decoration:underline}
 
   /* Header */
-  header{position:sticky;top:0;background:rgba(255,255,255,.9);border-bottom:1px solid var(--line);z-index:80;backdrop-filter:saturate(1.1) blur(8px)}
-  .bar{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;padding:12px 16px}
-  .brand{display:flex;align-items:center;gap:10px}
-  .brand img{height:56px;width:auto}
-  nav{display:flex;justify-content:center}
-  .nav{display:flex;list-style:none;margin:0;padding:0;gap:18px;white-space:nowrap}
+  header{border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:50}
+  .bar{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;padding:14px 24px;max-width:none;width:100%;margin:0}
+  .brand{display:flex;align-items:center;gap:12px;min-width:0}
+  .brand img{height:56px;width:auto;display:block}
+  nav{display:flex;align-items:center;justify-content:center}
+  .nav{display:flex;list-style:none;margin:0;padding:0;font-size:16px;width:100%;justify-content:space-evenly;flex-wrap:nowrap;white-space:nowrap;gap:0}
   .nav a{color:#374151;font-weight:700}
   .nav a:hover{color:var(--brand)}
   .has-sub{position:relative}
@@ -210,8 +208,8 @@
   <!-- Announcement -->
   <div class="announce">
     <div class="container announce-inner">
-      <div>Congratulations to our talented winemakers—medal winners at the 2025 Garden State Amateur Wine Challenge, including a <b>“Best Red” </b>gold honor!</div>
-      <div><a href="https://makewinewithus.com/login">Already have an account? Log in</a></div>
+      <div>🏅 Our winemakers clinched <strong>Best Red</strong> at the 2025 Garden State Amateur Wine Challenge — congratulations!</div>
+      <div><a href="https://makewinewithus.com/login">Log in</a></div>
     </div>
   </div>
 
@@ -294,7 +292,7 @@
   <!-- Journey Panels (full-width) -->
   <main id="steps" class="steps-wrap">
     <article class="panel" id="step-select" data-step="Select" data-desc="Choose your varietal and region with our wine experts — bring friends or teammates to kick off your vintage.">
-      <div class="bg"><video playsinline muted loop poster="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/page_featured_img_1695837847388.jpg" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1756755122264.mp4"></video></div>
+      <div class="bg">    <video playsinline muted autoplay loop poster="" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1756755122264.mp4"></video></div>
       <div class="content container">
         <div class="meta"><span class="tag">Step 1 of 6</span><span class="tag">California • Italy • Chile</span></div>
         <h2>Select your grapes</h2>
@@ -307,7 +305,7 @@
     </article>
 
     <article class="panel" id="step-crush" data-step="Crush" data-desc="Roll up your sleeves for crush and destemming — the energy is high, the juice is flowing, and the memories begin.">
-      <div class="bg"><video playsinline muted loop poster="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860172646.png" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1756756936845.mp4"></video></div>
+      <div class="bg"><video playsinline muted autoplay loop poster="" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1756756936845.mp4"></video></div>
       <div class="content container">
         <div class="meta"><span class="tag">Step 2 of 6</span><span class="tag">Hands-on session</span></div>
         <h2>Crush & destem</h2>
@@ -317,7 +315,7 @@
     </article>
 
     <article class="panel" id="step-rack" data-step="Rack" data-desc="Return for racking — remove sediment, clarify the wine, and watch its character emerge with each visit.">
-      <div class="bg"><video playsinline muted loop poster="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860233023.png" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1756755145249.mp4"></video></div>
+      <div class="bg"><video playsinline muted autoplay loop poster="" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1756755145249.mp4"></video></div>
       <div class="content container">
         <div class="meta"><span class="tag">Step 3 of 6</span><span class="tag">Clarity</span></div>
         <h2>Racking & refinement</h2>
@@ -326,7 +324,7 @@
     </article>
 
     <article class="panel" id="step-age" data-step="Age" data-desc="Barrel aging deepens flavor. Visit to taste, take notes, and tune oak, tannin, and balance with our team.">
-      <div class="bg"><video playsinline muted loop poster="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/1672830334412.png" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1756755097678.mp4"></video></div>
+      <div class="bg"><video playsinline muted autoplay loop poster="" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1756755097678.mp4"></video></div>
       <div class="content container">
         <div class="meta"><span class="tag">Step 4 of 6</span><span class="tag">Barrel room</span></div>
         <h2>Barrel aging</h2>
@@ -335,7 +333,7 @@
     </article>
 
     <article class="panel" id="step-bottle" data-step="Bottle" data-desc="It’s bottling day! Fill, cork, and prepare your cases — this is when your vintage becomes real.">
-      <div class="bg"><video playsinline muted loop poster="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/page_featured_img_1755630038560.jpg" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1756755109606.mp4"></video></div>
+      <div class="bg"><video playsinline muted autoplay loop poster="" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1756755109606.mp4"></video></div>
       <div class="content container">
         <div class="meta"><span class="tag">Step 5 of 6</span><span class="tag">Bottling line</span></div>
         <h2>Bottle your wine</h2>
@@ -344,7 +342,7 @@
     </article>
 
     <article class="panel" id="step-label" data-step="Label" data-desc="Design a label that tells your story — perfect for gifting to clients, friends, and family.">
-      <div class="bg"><video playsinline muted loop poster="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860278576.png" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1756755132827.mp4"></video></div>
+      <div class="bg"><video playsinline muted autoplay loop poster="" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1756755132827.mp4"></video></div>
       <div class="content container">
         <div class="meta"><span class="tag">Step 6 of 6</span><span class="tag">Your identity</span></div>
         <h2>Label & gift</h2>
@@ -402,9 +400,9 @@
       <h2 class="section-title" style="text-align:center;margin:0 0 10px">Stories from the cellar</h2>
       <p class="section-sub" style="text-align:center;margin:0 0 16px">Short clips from people who made their own vintage.</p>
       <div class="wrap">
-        <article class="story"><video playsinline controls poster="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/page_featured_img_1695837456585.jpg" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1756755199668.mp4"></video><div class="cap">“Best team event we’ve done.”</div></article>
-        <article class="story"><video playsinline controls poster="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860200388.png" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1756755209820.mp4"></video><div class="cap">“We bring our bottle to celebrations.”</div></article>
-        <article class="story"><video playsinline controls poster="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860291685.png" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1756755761301.mp4"></video><div class="cap">“It felt like carrying on a tradition.”</div></article>
+        <article class="story"><video playsinline controls poster="" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1756755199668.mp4"></video><div class="cap">“Best team event we’ve done.”</div></article>
+        <article class="story"><video playsinline controls poster="" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1756755209820.mp4"></video><div class="cap">“We bring our bottle to celebrations.”</div></article>
+        <article class="story"><video playsinline controls poster="" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1756755761301.mp4"></video><div class="cap">“It felt like carrying on a tradition.”</div></article>
       </div>
     </div>
   </section>
