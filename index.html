@@ -1,0 +1,677 @@
+<!DOCTYPE html>  
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Make Wine With Us — Cinematic Journey</title>
+<link rel="preconnect" href="https://d34hmiuaex7c0.cloudfront.net" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  :root{
+    --brand:#800080; --brand-2:#9a329a; --gold:#e9cf7c;
+    --ink:#0f172a; --muted:#6b7280; --line:#e9e9ee; --bg:#ffffff;
+    --radius:16px; --shadow-sm:0 8px 18px rgba(0,0,0,.06); --shadow-lg:0 24px 60px rgba(0,0,0,.12);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+  a{color:inherit;text-decoration:none}
+  img,video{max-width:100%;height:auto;display:block}
+  .container{max-width:1200px;margin:0 auto;padding:0 16px}
+  /* Make header full-width */
+  header .container{max-width:none}
+  .btn{display:inline-flex;align-items:center;justify-content:center;height:42px;padding:0 16px;border-radius:999px;border:1px solid transparent;font-weight:800;font-size:15px;cursor:pointer;transition:transform .04s ease, box-shadow .2s ease, background .2s ease, filter .2s ease;user-select:none;position:relative;overflow:hidden}
+  .btn:active{transform:translateY(1px)}
+  .btn.primary{background:linear-gradient(180deg,var(--brand),var(--brand-2));color:#fff;box-shadow:0 12px 28px rgba(128,0,128,.35)}
+  .btn.primary:hover{transform:translateY(-1px);box-shadow:0 18px 36px rgba(128,0,128,.45);filter:brightness(1.04)}
+  .btn.ghost{background:#fff;border-color:var(--line);color:#111827}
+  .btn.ghost:hover{border-color:var(--brand);color:var(--brand)}
+  .pulse{animation:pulse 2.2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(128,0,128,.45)}70%{box-shadow:0 0 0 18px rgba(128,0,128,0)}100%{box-shadow:0 0 0 0 rgba(128,0,128,0)}}
+
+  /* Announcement */
+  .announce{background:var(--brand);color:#fff;font-size:14px;line-height:1.35}
+  .announce-inner{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:10px 0}
+  .announce a{color:#fff;text-decoration:underline}
+
+  /* Header */
+  header{position:sticky;top:0;background:rgba(255,255,255,.9);border-bottom:1px solid var(--line);z-index:80;backdrop-filter:saturate(1.1) blur(8px)}
+  .bar{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;padding:12px 16px}
+  .brand{display:flex;align-items:center;gap:10px}
+  .brand img{height:56px;width:auto}
+  nav{display:flex;justify-content:center}
+  .nav{display:flex;list-style:none;margin:0;padding:0;gap:18px;white-space:nowrap}
+  .nav a{color:#374151;font-weight:700}
+  .nav a:hover{color:var(--brand)}
+  .has-sub{position:relative}
+  .subnav{position:absolute;top:calc(100% + 8px);left:0;background:#fff;border-radius:12px;box-shadow:0 14px 36px rgba(0,0,0,.12);padding:8px;display:none}
+  .has-sub:hover .subnav,.has-sub:focus-within .subnav{display:block}
+  .subnav a{display:block;padding:8px 10px;border-radius:8px}
+  .subnav a:hover{background:#faf7fb;color:var(--brand)}
+  .actions{display:flex;align-items:center;gap:12px}
+  .phone{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;color:#111827}
+  .phone svg{width:16px;height:16px}
+  .social{display:flex;gap:8px}
+  .social a{width:34px;height:34px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center}
+  .social a:hover{color:var(--brand)}
+  .hamburger{display:none}
+  #nav-toggle{display:none}
+  @media (max-width:980px){
+    .bar{grid-template-columns:auto auto 1fr}
+    .brand img{height:48px}
+    .hamburger{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:10px;padding:6px 10px;background:#fff}
+    nav{justify-content:flex-end}
+    .nav{position:fixed;inset:64px 16px auto 16px;flex-direction:column;gap:10px;background:#fff;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.08);padding:14px;display:none}
+    #nav-toggle:checked ~ nav .nav{display:flex}
+    .subnav{position:static;box-shadow:none;padding:6px 0}
+  }
+
+  /* Sticky CTA */
+  .sticky-cta{position:fixed;right:16px;bottom:16px;z-index:85}
+
+  /* ===== Hero (cinematic) ===== */
+  .hero{position:relative;min-height:70vh;background:#000;color:#fff;overflow:hidden}
+  .hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(1.05) contrast(1.05)}
+  .hero .parallax{position:absolute;inset:0;pointer-events:none}
+  .hero .vine{position:absolute;width:140%;left:-20%;top:-10%;opacity:.35}
+  .hero .dust{position:absolute;inset:0}
+  .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.2) 40%,rgba(0,0,0,.65));}
+  .hero .inner{position:relative;z-index:1;display:grid;place-items:center;min-height:70vh;text-align:center;padding:clamp(36px,8vw,100px) 16px}
+  .hero h1{margin:0 0 10px;font-size:clamp(32px,6vw,64px);letter-spacing:.3px;text-shadow:0 2px 18px rgba(0,0,0,.55)}
+  .hero p{margin:0 0 18px;font-size:clamp(16px,2.2vw,22px);opacity:.98}
+
+  /* ===== Progress Ribbon (persistent) ===== */
+  .ribbon{position:sticky;top:64px;z-index:70;background:rgba(255,255,255,.8);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .ribbon .track{max-width:1200px;margin:0 auto;padding:10px 16px;display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+  .step-pill{position:relative;display:flex;align-items:center;justify-content:center;gap:8px;height:34px;border-radius:999px;background:#fff;border:1px solid var(--line);font-weight:800;color:#374151;overflow:hidden}
+  .step-pill .dot{width:10px;height:10px;border-radius:50%;background:#d6d3db}
+  .step-pill .fill{position:absolute;inset:0 0 0 auto;width:0;background:linear-gradient(90deg,rgba(154,50,154,.18),rgba(128,0,128,.22));transition:width .35s ease}
+  .step-pill.active{border-color:var(--brand);color:var(--brand)}
+  .step-pill.active .dot{background:var(--brand)}
+
+  /* ===== Cinematic Step Panels ===== */
+  .steps-wrap{position:relative}
+  .panel{position:relative;min-height:92vh;margin:14px 0;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#000;scroll-margin-top:114px}
+  .panel .bg{position:absolute;inset:0}
+  .panel video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(1.08) contrast(1.05)}
+  .panel::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.45), rgba(0,0,0,.2) 35%, rgba(0,0,0,.55));pointer-events:none}
+  .panel .content{position:relative;z-index:1;color:#fff;display:grid;gap:12px;align-content:end;min-height:92vh;padding:28px}
+  .panel h2{margin:0;font-size:clamp(26px,4.6vw,46px);letter-spacing:.3px;text-shadow:0 2px 14px rgba(0,0,0,.5)}
+  .panel p{margin:0 0 8px;font-size:clamp(15px,2vw,18px);opacity:.95;max-width:820px}
+  .panel .meta{display:flex;gap:10px;flex-wrap:wrap}
+  .panel .meta .tag{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:6px 10px;font-weight:700}
+  .steps-wrap{scroll-snap-type:y mandatory}
+  .panel{scroll-snap-align:start}
+  @media (max-width:900px){
+    .steps-wrap{scroll-snap-type:x mandatory;display:grid;grid-auto-flow:column;grid-auto-columns:100%;overflow-x:auto}
+    .panel{min-height:84vh;scroll-snap-align:center}
+  }
+
+  /* Label card with subtle 3D */
+  .label-card{position:absolute;right:18px;top:18px;background:rgba(255,255,255,.92);backdrop-filter:blur(4px);border:1px solid var(--line);border-radius:14px;padding:12px;box-shadow:var(--shadow-lg);color:#111827;transform:perspective(600px) rotateY(-8deg);transform-origin:right center;transition:transform .3s ease}
+  .label-card:hover{transform:perspective(600px) rotateY(0)}
+  .label-card .field{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+  .label-card input,.label-card select{padding:8px 10px;border:1px solid var(--line);border-radius:8px;font:inherit}
+  .mini-bottle{position:relative;width:120px;aspect-ratio:3/7;border-radius:14px;background:linear-gradient(180deg,#1e1e1e,#000);box-shadow:inset 0 10px 30px rgba(255,255,255,.08), inset 0 -14px 40px rgba(0,0,0,.6)}
+  .mini-bottle .lab{position:absolute;left:10%;right:10%;top:36%;height:28%;background:#fff;border:2px solid #efe7f3;border-radius:10px;display:grid;place-items:center;padding:6px;text-align:center}
+  .mini-bottle .lab b{display:block;font-size:14px}
+  .mini-bottle .lab small{font-size:10px;color:#6b6470}
+
+  /* Countdown */
+  .countdown{position:relative;background:linear-gradient(180deg,#faf7fb,#fff);padding: clamp(28px,6vw,64px) 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .count-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:20px;align-items:center}
+  .timer{display:flex;gap:10px;flex-wrap:wrap}
+  .tile{min-width:92px;border-radius:14px;border:1px solid var(--line);background:#fff;box-shadow:var(--shadow-sm);padding:12px;text-align:center}
+  .tile b{display:block;font-size:26px}
+  @media(max-width:900px){.count-grid{grid-template-columns:1fr}.tile{min-width:74px}}
+
+  /* Mosaic */
+  .mosaic{padding: clamp(40px,6vw,80px) 0;background:#fff}
+  .mosaic .section-title{text-align:center;font-size:clamp(24px,4.2vw,36px);margin:0 0 12px}
+  .mosaic .section-sub{text-align:center;color:var(--muted);max-width:760px;margin:0 auto 28px}
+  .grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+  .photo-tile{position:relative;overflow:hidden;border-radius:12px}
+  .photo-tile img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.2,.6,.2,1)}
+  .photo-tile:hover img{transform:scale(1.06)}
+  @media(max-width:980px){.grid{grid-template-columns:repeat(4,1fr)}}
+  @media(max-width:640px){.grid{grid-template-columns:repeat(3,1fr)}}
+
+  /* Testimonials (video stories) */
+  .stories{background:#fff;padding: clamp(36px,6vw,76px) 0}
+  .stories .wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .story{border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow-sm)}
+  .story video{width:100%;aspect-ratio:9/16;object-fit:cover}
+  .story .cap{padding:10px;font-weight:700}
+  @media(max-width:980px){.stories .wrap{grid-template-columns:1fr 1fr}}
+  @media(max-width:640px){.stories .wrap{grid-template-columns:1fr}}
+
+  /* Team band */
+  .team{background:linear-gradient(180deg,#faf7fb,#fff);padding: clamp(36px,6vw,76px) 0}
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .tcard{border:1px solid var(--line);border-radius:18px;background:#fff;box-shadow:var(--shadow-lg);overflow:hidden}
+  .tcard .media{aspect-ratio:16/9;background:#000}
+  .tcard .body{padding:14px}
+  .tcard h3{margin:0 0 6px}
+  .tcard p{margin:0 0 10px;color:#4b5563}
+  @media(max-width:900px){.cards{grid-template-columns:1fr}}
+
+  /* Quiz */
+  .quiz{padding: clamp(36px,6vw,72px) 0;background:#fff;border-top:1px solid var(--line)}
+  .quiz .inner{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:center}
+  .quiz .card{border:1px solid var(--line);border-radius:16px;padding:16px;background:#fff;box-shadow:var(--shadow-sm)}
+  .quiz h3{margin:0 0 8px}
+  .quiz label{display:block;margin:8px 0}
+  .result{margin-top:10px;font-weight:800;color:#374151}
+  @media(max-width:900px){.quiz .inner{grid-template-columns:1fr}}
+
+  /* Contact & Footer (base from existing page) */
+  .contact{position:relative;padding: clamp(48px, 8vw, 96px) 0;background:url("https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/1672830407529.png") center/cover no-repeat;isolation:isolate}
+  .contact::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(128,0,128,.7),rgba(154,50,154,.7));backdrop-filter:blur(2px)}
+  .contact-grid{position:relative;z-index:1;display:grid;gap:28px;grid-template-columns:1.05fr 1fr}
+  .contact .photo{border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-lg)}
+  .contact .form{background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:0 16px 40px rgba(0,0,0,.12)}
+  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+  .field input,.field textarea{padding:10px 12px;border:1px solid var(--line);border-radius:10px;font:inherit}
+
+  /* Footer — enhanced styles to match the requested footer */
+  .site-footer{background:#111;color:#ddd;font-size:15px;line-height:1.6;padding-top:50px}
+  .footer-grid{display:grid;gap:40px;grid-template-columns: 1.2fr 1fr 1fr}
+  @media(max-width:900px){ .footer-grid{grid-template-columns:1fr 1fr} }
+  @media(max-width:640px){ .footer-grid{grid-template-columns:1fr} }
+  .foot-title{color:#fff;font-weight:800;margin:0 0 12px;font-size:16px;text-transform:uppercase;position:relative}
+  .foot-title::after{content:"";display:block;width:40px;height:2px;background:var(--brand);margin-top:6px}
+  .footer-text{margin-bottom:14px;max-width:500px;color:#ccc}
+  .footer-cta{margin-top:6px;display:inline-block;font-size:14px;padding:8px 18px}
+  .footer-social{margin-top:16px;display:flex;gap:12px}
+  .footer-social a{width:34px;height:34px;border-radius:50%;background:#222;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:15px}
+  .footer-social a:hover{background:var(--brand);color:#fff}
+  .foot-links{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:8px 24px}
+  .foot-links a{color:#ddd;font-weight:500}
+  .foot-links a:hover{color:#fff}
+  .contact-list{list-style:none;padding:0;margin:0 0 14px;display:flex;flex-direction:column;gap:10px}
+  .contact-list i{margin-right:8px;color:var(--brand)}
+  .contact-list a{color:#ddd}
+  .contact-list a:hover{color:#fff}
+  .hours-label{display:block;font-size:13px;color:#aaa;margin-bottom:2px;text-transform:uppercase}
+  .hours-value{color:#eee}
+  .footer-bottom{border-top:1px solid #222;margin-top:40px;padding:18px 0;font-size:13px;color:#999}
+  .footer-bottom-inner{display:flex;align-items:center;justify-content:space-between;gap:20px}
+  .footer-bottom a{color:#999;margin-left:14px}
+  .footer-bottom a:hover{color:#fff}
+
+  .section-title{font-weight:900}
+  .section-sub{font-size:16px}
+  @media (prefers-reduced-motion: reduce){
+    .hero video,.panel video{display:none}
+    .pulse{animation:none}
+  }
+</style>
+</head>
+<body>
+  <!-- Announcement -->
+  <div class="announce">
+    <div class="container announce-inner">
+      <div>🏅 Our winemakers clinched <strong>Best Red</strong> at the 2025 Garden State Amateur Wine Challenge — congratulations!</div>
+      <div><a href="https://makewinewithus.com/login">Log in</a></div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div class="container bar">
+      <a class="brand" href="#" aria-label="Make Wine With Us — Home">
+        <img src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/1672135833219.png" alt="Make Wine With Us logo"/>
+      </a>
+      <label class="hamburger" for="nav-toggle">☰ Menu</label>
+      <input id="nav-toggle" type="checkbox"/>
+      <nav aria-label="Primary">
+        <ul class="nav">
+          <li class="has-sub"><a href="https://makewinewithus.com/winemaking-process">Winemaking Process</a>
+            <div class="subnav" role="menu">
+              <a href="https://makewinewithus.com/new-product-list" role="menuitem">Wines You Can Make</a>
+              <a href="https://makewinewithus.com/design-your-custom-bottle" role="menuitem">Label Making</a>
+            </div>
+          </li>
+          <li><a href="https://makewinewithus.com/region">Regions</a></li>
+          <li><a href="https://makewinewithus.com/about">About</a></li>
+          <li><a href="https://makewinewithus.com/faq-s">FAQs</a></li>
+          <li class="has-sub"><a href="https://makewinewithus.com/upcoming-events">Events</a>
+            <div class="subnav" role="menu">
+              <a href="https://makewinewithus.com/private-events" role="menuitem">Private Events</a>
+              <a href="https://makewinewithus.com/upcoming-events" role="menuitem">Upcoming Events</a>
+            </div>
+          </li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="actions">
+        <a class="phone" href="tel:+12018769463" aria-label="Call Make Wine With Us">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 3.09 5.18 2 2 0 0 1 5 3h3a2 2 0 0 1 2 1.72c.12.9.31 1.77.57 2.6a2 2 0 0 1-.45 2.11L9 10a16 16 0 0 0 5 5l.57-.57a2 2 0 0 1 2.11-.45c.83.26 1.7.45 2.6.57A2 2 0 0 1 22 16.92z"/></svg>
+          (201) 876-9463
+        </a>
+        <div class="social">
+          <a href="https://www.facebook.com/MakeWineWithUs" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://www.instagram.com/makewinewithus/" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        </div>
+        <a class="btn primary pulse" href="https://makewinewithus.com/create-account">Make Wine Now</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sticky CTA -->
+  <div class="sticky-cta"><a class="btn primary pulse" href="https://makewinewithus.com/create-account">Start Your Vintage</a></div>
+
+  <!-- Cinematic Hero with parallax + particles -->
+  <section class="hero" aria-label="Cinematic intro">
+    <video playsinline muted autoplay loop poster="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860291685.png" src="https://cdn.coverr.co/videos/coverr-people-raising-wine-glasses-5162/1080p.mp4"></video>
+    <div class="parallax">
+      <img class="vine" data-speed="0.3" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860315613.png" alt="Vines"/>
+      <canvas class="dust" id="dust"></canvas>
+    </div>
+    <div class="inner container">
+      <div>
+        <h1>Make wine, memories, and a legacy</h1>
+        <p>Friends and teams return over nine months to craft a vintage together — guided by our wine experts. Classy. Fun. Unforgettable.</p>
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+          <a class="btn primary" href="#steps">Experience the journey</a>
+          <a class="btn ghost" href="https://makewinewithus.com/private-events">Plan a team night</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Progress Ribbon (persists as you scroll) -->
+  <div class="ribbon" aria-label="Your Story progress">
+    <div class="track">
+      <div class="step-pill" data-step="step-select"><span class="fill"></span><span class="dot"></span><span>Select</span></div>
+      <div class="step-pill" data-step="step-crush"><span class="fill"></span><span class="dot"></span><span>Crush</span></div>
+      <div class="step-pill" data-step="step-rack"><span class="fill"></span><span class="dot"></span><span>Rack</span></div>
+      <div class="step-pill" data-step="step-age"><span class="fill"></span><span class="dot"></span><span>Age</span></div>
+      <div class="step-pill" data-step="step-bottle"><span class="fill"></span><span class="dot"></span><span>Bottle</span></div>
+      <div class="step-pill" data-step="step-label"><span class="fill"></span><span class="dot"></span><span>Label</span></div>
+    </div>
+  </div>
+
+  <!-- Journey Panels (full-width) -->
+  <main id="steps" class="steps-wrap">
+    <article class="panel" id="step-select" data-step="Select" data-desc="Choose your varietal and region with our wine experts — bring friends or teammates to kick off your vintage.">
+      <div class="bg"><video playsinline muted loop poster="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/page_featured_img_1695837847388.jpg" src="https://cdn.coverr.co/videos/coverr-grapes-in-the-sun-3632/1080p.mp4"></video></div>
+      <div class="content container">
+        <div class="meta"><span class="tag">Step 1 of 6</span><span class="tag">California • Italy • Chile</span></div>
+        <h2>Select your grapes</h2>
+        <p>With our instructors, pick the varietal and region that match your taste and your occasion — a corporate blend, a friends’ favorite, or your signature vintage.</p>
+        <div>
+          <a class="btn primary" href="https://makewinewithus.com/new-product-list">Explore grapes</a>
+          <a class="btn ghost" href="https://makewinewithus.com/region" style="margin-left:8px">See regions</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="panel" id="step-crush" data-step="Crush" data-desc="Roll up your sleeves for crush and destemming — the energy is high, the juice is flowing, and the memories begin.">
+      <div class="bg"><video playsinline muted loop poster="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860172646.png" src="https://cdn.coverr.co/videos/coverr-wine-pouring-7485/1080p.mp4"></video></div>
+      <div class="content container">
+        <div class="meta"><span class="tag">Step 2 of 6</span><span class="tag">Hands-on session</span></div>
+        <h2>Crush & destem</h2>
+        <p>Experience the press with your group. It’s hands-on, social, and guided — with modern equipment and expert oversight.</p>
+        <div><a class="btn primary" href="https://makewinewithus.com/upcoming-events">Reserve a crush date</a></div>
+      </div>
+    </article>
+
+    <article class="panel" id="step-rack" data-step="Rack" data-desc="Return for racking — remove sediment, clarify the wine, and watch its character emerge with each visit.">
+      <div class="bg"><video playsinline muted loop poster="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860233023.png" src="https://cdn.coverr.co/videos/coverr-red-wine-pours-into-a-glass-5972/1080p.mp4"></video></div>
+      <div class="content container">
+        <div class="meta"><span class="tag">Step 3 of 6</span><span class="tag">Clarity</span></div>
+        <h2>Racking & refinement</h2>
+        <p>Meet your batch again. Racking removes lees and clarifies your wine. You’ll taste and learn what’s changing.</p>
+      </div>
+    </article>
+
+    <article class="panel" id="step-age" data-step="Age" data-desc="Barrel aging deepens flavor. Visit to taste, take notes, and tune oak, tannin, and balance with our team.">
+      <div class="bg"><video playsinline muted loop poster="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/1672830334412.png" src="https://cdn.coverr.co/videos/coverr-barrels-of-wine-7098/1080p.mp4"></video></div>
+      <div class="content container">
+        <div class="meta"><span class="tag">Step 4 of 6</span><span class="tag">Barrel room</span></div>
+        <h2>Barrel aging</h2>
+        <p>Over months, your wine rounds out. Drop in with your group to taste and adjust — it’s a living process you’ll feel connected to.</p>
+      </div>
+    </article>
+
+    <article class="panel" id="step-bottle" data-step="Bottle" data-desc="It’s bottling day! Fill, cork, and prepare your cases — this is when your vintage becomes real.">
+      <div class="bg"><video playsinline muted loop poster="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/page_featured_img_1755630038560.jpg" src="https://cdn.coverr.co/videos/coverr-a-line-of-bottles-gets-filled-0628/1080p.mp4"></video></div>
+      <div class="content container">
+        <div class="meta"><span class="tag">Step 5 of 6</span><span class="tag">Bottling line</span></div>
+        <h2>Bottle your wine</h2>
+        <p>Hands-on bottling with your crew. It’s equal parts factory line and celebration — cue the photos.</p>
+      </div>
+      <div class="label-card" aria-label="Label preview">
+        <div class="mini-bottle" style="margin-bottom:10px">
+          <div class="lab" id="lab"><b id="labName">ROMANO RESERVE</b><small id="labSub">Cabernet • 2025</small></div>
+        </div>
+        <div class="field"><label for="nm">Name</label><input id="nm" placeholder="ROMANO RESERVE" maxlength="28"></div>
+        <div class="field"><label for="vv">Varietal</label>
+          <select id="vv"><option>Cabernet</option><option>Merlot</option><option>Sangiovese</option><option>Pinot Grigio</option><option>Sauvignon Blanc</option></select>
+        </div>
+        <div class="field"><label for="yr">Year</label><input id="yr" type="number" min="2010" max="2030" value="2025"></div>
+        <a class="btn primary" href="https://makewinewithus.com/design-your-custom-bottle">Full label designer</a>
+      </div>
+    </article>
+
+    <article class="panel" id="step-label" data-step="Label" data-desc="Design a label that tells your story — perfect for gifting to clients, friends, and family.">
+      <div class="bg"><video playsinline muted loop poster="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860278576.png" src="https://cdn.coverr.co/videos/coverr-close-up-of-a-wine-bottle-4690/1080p.mp4"></video></div>
+      <div class="content container">
+        <div class="meta"><span class="tag">Step 6 of 6</span><span class="tag">Your identity</span></div>
+        <h2>Label & gift</h2>
+        <p>Put your name on it. Corporate teams, clubs, and families love gifting their own vintage — it’s classy and personal.</p>
+        <div><a class="btn primary" href="https://makewinewithus.com/create-account">Start your vintage</a></div>
+      </div>
+    </article>
+  </main>
+
+  <!-- Event Countdown -->
+  <section class="countdown" aria-label="Upcoming harvest">
+    <div class="container count-grid">
+      <div>
+        <h2 class="section-title" style="margin:0 0 6px">Fall Harvest & Crush Weekend</h2>
+        <p class="section-sub" style="margin:0 0 10px">Be there for the action — slots are limited. Reserve your team or friend group.</p>
+        <div class="timer" id="timer">
+          <div class="tile"><span>Days</span><b id="d">00</b></div>
+          <div class="tile"><span>Hours</span><b id="h">00</b></div>
+          <div class="tile"><span>Minutes</span><b id="m">00</b></div>
+          <div class="tile"><span>Seconds</span><b id="s">00</b></div>
+        </div>
+        <div style="margin-top:12px"><a class="btn primary" href="https://makewinewithus.com/upcoming-events">See dates</a></div>
+      </div>
+      <div class="card" style="border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-sm);overflow:hidden">
+        <video playsinline muted loop poster="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860172646.png" src="https://cdn.coverr.co/videos/coverr-wine-pouring-7485/1080p.mp4"></video>
+      </div>
+    </div>
+  </section>
+
+  <!-- Social Mosaic -->
+  <section class="mosaic" aria-label="Community moments">
+    <div class="container">
+      <h2 class="section-title">What it feels like</h2>
+      <p class="section-sub">A living wall from crush nights, racking weekends, and bottling day.</p>
+      <div class="grid" id="mosaicGrid" aria-live="polite">
+        <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860172646.png" alt="Crush in action"></div>
+        <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860246123.png" alt="Wine glasses"></div>
+        <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/page_featured_img_1695837847388.jpg" alt="Clusters of grapes"></div>
+        <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860262126.png" alt="Press operation"></div>
+        <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860291685.png" alt="Toasting"></div>
+        <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/page_featured_img_1755630038560.jpg" alt="Bottling line"></div>
+        <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860315613.png" alt="Vineyard"></div>
+        <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860216146.png" alt="Measuring Brix"></div>
+        <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/1672830334412.png" alt="Corks"></div>
+        <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860200388.png" alt="Grape selection"></div>
+        <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860233023.png" alt="Skins and seeds"></div>
+        <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/1672146705739.png" alt="Hero frame"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonial Stories -->
+  <section class="stories" aria-label="How it impacted them">
+    <div class="container">
+      <h2 class="section-title" style="text-align:center;margin:0 0 10px">Stories from the cellar</h2>
+      <p class="section-sub" style="text-align:center;margin:0 0 16px">Short clips from people who made their own vintage.</p>
+      <div class="wrap">
+        <article class="story"><video playsinline controls poster="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/page_featured_img_1695837456585.jpg" src="https://cdn.coverr.co/videos/coverr-wine-tasting-people-1122/1080p.mp4"></video><div class="cap">“Best team event we’ve done.”</div></article>
+        <article class="story"><video playsinline controls poster="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860200388.png" src="https://cdn.coverr.co/videos/coverr-couple-tasting-wine-8738/1080p.mp4"></video><div class="cap">“We bring our bottle to celebrations.”</div></article>
+        <article class="story"><video playsinline controls poster="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860291685.png" src="https://cdn.coverr.co/videos/coverr-wine-and-friends-5929/1080p.mp4"></video><div class="cap">“It felt like carrying on a tradition.”</div></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team band -->
+  <section class="team" aria-label="Teams and friends">
+    <div class="container">
+      <h2 class="section-title" style="text-align:center;margin:0 0 6px">Come together — over nine months</h2>
+      <p class="section-sub" style="text-align:center;margin:0 0 18px">Return for crush, racking, aging, and bottling. Teams bond. Friends become family. A culture of winemaking continues.</p>
+      <div class="cards">
+        <article class="tcard">
+          <div class="media"><video playsinline muted loop poster="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860291685.png" src="https://cdn.coverr.co/videos/coverr-people-raising-wine-glasses-5162/1080p.mp4"></video></div>
+          <div class="body"><h3>For Teams & Clients</h3><p>Make a company vintage for gifting and events. The process becomes a shared story your clients remember.</p><a class="btn ghost" href="https://makewinewithus.com/private-events">Corporate experiences</a></div>
+        </article>
+        <article class="tcard">
+          <div class="media"><video playsinline muted loop poster="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860139270.png" src="https://cdn.coverr.co/videos/coverr-friends-toast-4742/1080p.mp4"></video></div>
+          <div class="body"><h3>For Friends & Family</h3><p>Birthdays, engagements, weddings — craft a label you’ll bring out for years and say “we made this.”</p><a class="btn ghost" href="https://makewinewithus.com/upcoming-events">Plan your season</a></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quiz -->
+  <section class="quiz" aria-label="Wine personality quiz">
+    <div class="container inner">
+      <div>
+        <h2 class="section-title" style="margin:0 0 8px">What’s your wine personality?</h2>
+        <p class="section-sub">Answer three quick questions and we’ll suggest grapes you’ll love — then book your first session.</p>
+      </div>
+      <div class="card">
+        <h3>Tell us your vibe</h3>
+        <label><input type="radio" name="vibe" value="bold"> Bold & structured</label>
+        <label><input type="radio" name="vibe" value="fruit"> Juicy & fruit-forward</label>
+        <label><input type="radio" name="vibe" value="crisp"> Crisp & zesty</label>
+        <label><input type="radio" name="vibe" value="silky"> Silky & elegant</label>
+        <div class="result" id="qResult">—</div>
+        <div style="margin-top:10px"><a class="btn primary" href="https://makewinewithus.com/new-product-list">See suggested grapes</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="contact">
+    <div class="container contact-grid">
+      <figure class="photo"><img src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/1672830334412.png" alt="Custom MWwU corks"></figure>
+      <div class="form">
+        <h2 class="section-title" style="margin:0 0 8px">Contact Us</h2>
+        <p class="section-sub" style="margin:0 0 14px">We’ll help you plan the perfect vintage for your team or your friends & family.</p>
+        <form novalidate>
+          <div style="display:grid;gap:12px;grid-template-columns:1fr 1fr"><div class="field"><label>First name</label><input required autocomplete="given-name"></div><div class="field"><label>Last name</label><input required autocomplete="family-name"></div></div>
+          <div class="field"><label>Email</label><input type="email" required autocomplete="email" placeholder="you@example.com"></div>
+          <div class="field"><label>Phone</label><input type="tel" required autocomplete="tel"></div>
+          <div class="field"><label>Message</label><textarea rows="4" required></textarea></div>
+          <button class="btn primary" type="submit">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Footer (replaced with the requested version) ===== -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <h3 class="foot-title">About Make Wine With Us</h3>
+        <p class="footer-text">
+          Enjoy a unique winemaking experience - craft your own wine from premium grapes with guidance from our expert staff. Aged to perfection over a 9-month period, your wine is then bottled by you and taken home to savor and share.
+        </p>
+        <a href="https://makewinewithus.com/create-account" class="btn primary footer-cta">Become a Winemaker</a>
+        <div class="footer-social">
+          <a href="https://www.instagram.com/makewinewithus/" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.facebook.com/MakeWineWithUs" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h3 class="foot-title">Explore</h3>
+        <ul class="foot-links">
+          <li><a href="https://makewinewithus.com/about">About</a></li><li><a href="https://makewinewithus.com/winemaking-process">Winemaking Process</a></li>
+          <li><a href="https://makewinewithus.com/new-product-list">Wines You Can Make</a></li><li><a href="https://makewinewithus.com/region">Regions</a></li>
+          <li><a href="https://makewinewithus.com/blog">Blog</a></li><li><a href="https://makewinewithus.com/faq-s">FAQs</a></li>
+          <li><a href="https://makewinewithus.com/upcoming-events">Events</a></li><li><a href="https://makewinewithus.com/private-events">Private Events</a></li>
+          <li><a href="https://makewinewithus.com/contact">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h3 class="foot-title">Have a Question?</h3>
+        <ul class="contact-list">
+          <li><i class="fas fa-map-marker-alt"></i>21 Curie Avenue, Wallington, NJ 07057</li>
+          <li><i class="fas fa-phone-alt"></i><a href="tel:+12018769463">(201) 876-9463</a></li>
+          <li><i class="fas fa-envelope"></i><a href="mailto:info@makewinewithus.com">info@makewinewithus.com</a></li>
+        </ul>
+        <div class="hours">
+          <span class="hours-label">Hours</span>
+          <span class="hours-value">Closed today</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container footer-bottom-inner">
+        <p>© 2025 Make Wine With Us. All rights reserved.</p>
+        <div class="foot-legal"><a href="https://makewinewithus.com/privacy-policy">Privacy</a><a href="https://makewinewithus.com/terms-of-service">Terms</a></div>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function(){
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* Ripple microinteraction */
+  document.addEventListener('click', e=>{
+    const t = e.target.closest('.btn'); if(!t) return; const r=document.createElement('span');
+    const rect=t.getBoundingClientRect(); r.style.position='absolute'; r.style.left=(e.clientX-rect.left)+'px'; r.style.top=(e.clientY-rect.top)+'px'; r.style.width=r.style.height='6px'; r.style.borderRadius='50%'; r.style.background='rgba(255,255,255,.5)'; r.style.transform='translate(-50%,-50%) scale(0)'; r.style.pointerEvents='none'; r.style.transition='transform .6s ease, opacity .8s ease'; t.appendChild(r); requestAnimationFrame(()=>{ r.style.transform='translate(-50%,-50%) scale(18)'; r.style.opacity='0';}); setTimeout(()=>r.remove(),800);
+  });
+
+  /* Parallax vines */
+  const vine = document.querySelector('.vine');
+  window.addEventListener('scroll', ()=>{ const y=window.scrollY*0.15; vine.style.transform=`translateY(${y}px)`; }, {passive:true});
+
+  /* Particles (dust motes) */
+  const canvas = document.getElementById('dust'); const ctx = canvas.getContext('2d');
+  function resize(){ canvas.width=canvas.clientWidth; canvas.height=canvas.clientHeight; }
+  function mote(){ return {x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.6+0.4, s:Math.random()*0.3+0.05, a:Math.random()*0.5+0.2}; }
+  let motes=[]; function init(){ resize(); motes = Array.from({length:120}, mote); }
+  window.addEventListener('resize', init); init();
+  function tick(){ ctx.clearRect(0,0,canvas.width,canvas.height); ctx.fillStyle='#fff'; motes.forEach(p=>{ p.y += p.s; if(p.y>canvas.height) p.y= -2; ctx.globalAlpha=p.a; ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();}); ctx.globalAlpha=1; requestAnimationFrame(tick);} tick();
+
+  /* Progress ribbon behavior */
+  const ribbonPills = [...document.querySelectorAll('.step-pill')];
+  ribbonPills.forEach(p=> p.addEventListener('click', ()=> document.getElementById(p.dataset.step).scrollIntoView({behavior:'smooth'})));
+
+  const panels = ribbonPills.map(p=> document.getElementById(p.dataset.step));
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(en=>{
+      if(en.isIntersecting){
+        const id = en.target.id; ribbonPills.forEach(p=>{
+          const active = p.dataset.step===id; p.classList.toggle('active', active);
+        });
+      }
+      // Fill progress based on how much of the page we’ve consumed
+      const total = panels.length; const idx = panels.findIndex(x=>x===en.target);
+      if(en.isIntersecting){ for(let i=0;i<ribbonPills.length;i++){ const f = i<idx ? 1 : (i===idx ? 0.5 : 0); ribbonPills[i].querySelector('.fill').style.width=(f*100)+'%'; } }
+    });
+  },{threshold:.58});
+  panels.forEach(p=>io.observe(p));
+
+  /* Web Speech narration (toggle via keyboard N) */
+  let narrate=false; document.addEventListener('keydown', e=>{ if(e.key.toLowerCase()==='n'){ narrate=!narrate; if(!narrate && 'speechSynthesis' in window) window.speechSynthesis.cancel(); }});
+  function speak(text){ if(!narrate||prefersReduced||!('speechSynthesis' in window)) return; try{window.speechSynthesis.cancel();}catch(e){} const u=new SpeechSynthesisUtterance(text); u.rate=1.02; u.lang='en-US'; window.speechSynthesis.speak(u); }
+  panels.forEach(p=>{ const obs=new IntersectionObserver(es=>{ es.forEach(en=>{ if(en.isIntersecting) speak(p.dataset.step+ '. '+ (p.dataset.desc||'')); }); },{threshold:.6}); obs.observe(p); });
+
+  /* Label Preview bindings */
+  const nm = document.getElementById('nm'); const vv = document.getElementById('vv'); const yr = document.getElementById('yr'); const labName = document.getElementById('labName'); const labSub = document.getElementById('labSub');
+  function upd(){ labName.textContent=(nm.value||'ROMANO RESERVE').toUpperCase(); labSub.textContent=`${vv.value} • ${yr.value||'2025'}`; } ['input','change'].forEach(ev=>{ nm&&nm.addEventListener(ev,upd); vv&&vv.addEventListener(ev,upd); yr&&yr.addEventListener(ev,upd);}); upd();
+
+  /* Countdown to a sample date (edit to real event) */
+  const target = new Date('2025-09-20T13:00:00-04:00'); const ids = {d:'d',h:'h',m:'m',s:'s'}; function fmt(n){return String(n).padStart(2,'0');}
+  function tickTimer(){ const now=new Date(); let diff=Math.max(0, target-now); const d=Math.floor(diff/86400000); diff-=d*86400000; const h=Math.floor(diff/3600000); diff-=h*3600000; const m=Math.floor(diff/60000); diff-=m*60000; const s=Math.floor(diff/1000); ['d','h','m','s'].forEach(k=>{ const el=document.getElementById(k); if(el) el.textContent=fmt({d,h,m,s}[k]);}); }
+  setInterval(tickTimer,1000); tickTimer();
+
+  /* Mosaic shuffle */
+  const grid = document.getElementById('mosaicGrid');
+  function shuffle(){ const tiles=[...grid.children]; for(let i=tiles.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); if(j!==i) grid.insertBefore(tiles[j], tiles[i]); } }
+  let t = setInterval(shuffle, 6000); grid.addEventListener('pointerenter', ()=>clearInterval(t)); grid.addEventListener('pointerleave', ()=>{t=setInterval(shuffle,6000)});
+
+  /* Videos pause off-screen */
+  const vids=[...document.querySelectorAll('video')]; const vio=new IntersectionObserver((entries)=>{ entries.forEach(en=>{ const v=en.target; if(prefersReduced){v.pause();return;} if(en.isIntersecting){ v.play().catch(()=>{});} else { v.pause(); } }); },{threshold:.2}); vids.forEach(v=>vio.observe(v));
+
+  /* Quiz logic */
+  const res = document.getElementById('qResult'); const opts=[...document.querySelectorAll('input[name="vibe"]')]; opts.forEach(o=>o.addEventListener('change', ()=>{ const map={bold:'Cabernet, Sangiovese', fruit:'Zinfandel, Barbera', crisp:'Pinot Grigio, Sauvignon Blanc', silky:'Merlot, Pinot Noir'}; res.textContent = 'Recommended: '+ (map[o.value]||''); }));
+})();
+</script>
+
+<!-- Dynamic business hours (America/New_York) for the footer -->
+<script>
+// Dynamic business hours (America/New_York)
+(function(){
+  const tz = 'America/New_York';
+  // 0=Sun..6=Sat
+  const schedule = [
+    null,                                   // Sun - Closed
+    null,                                   // Mon - Closed
+    {open:[13,0], close:[17,0]},            // Tue 1pm–5pm
+    {open:[13,0], close:[18,0]},            // Wed 1pm–6pm
+    {open:[13,0], close:[18,0]},            // Thu 1pm–6pm
+    {open:[13,0], close:[18,0]},            // Fri 1pm–6pm
+    null                                    // Sat - Closed
+  ];
+  const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+  function getParts(d){
+    const parts = new Intl.DateTimeFormat('en-US', {
+      timeZone: tz, weekday:'short', year:'numeric', month:'2-digit', day:'2-digit',
+      hour:'2-digit', minute:'2-digit', hour12:false
+    }).formatToParts(d);
+    const map = {};
+    for(const p of parts) map[p.type] = p.value;
+    const dayIdx = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(map.weekday);
+    return { dayIdx, hour:parseInt(map.hour,10), minute:parseInt(map.minute,10) };
+  }
+
+  function fmtTime([h,m]){
+    const ampm = h>=12 ? 'PM' : 'AM';
+    const h12 = ((h+11)%12)+1;
+    const mm = String(m).padStart(2,'0');
+    return `${h12}:${mm} ${ampm}`;
+  }
+
+  function nextOpenFrom(idx){
+    for(let i=1;i<=7;i++){
+      const n = (idx + i) % 7;
+      if (schedule[n]) return {dayIdx:n, opening:schedule[n].open};
+    }
+    return null;
+  }
+
+  const nowParts = getParts(new Date());
+  const target = document.querySelector('.hours .hours-value');
+  if(!target){ return; }
+
+  const today = schedule[nowParts.dayIdx];
+  if(!today){
+    // Closed all day
+    target.textContent = 'Closed today';
+    return;
+  }
+
+  const nowMin = nowParts.hour*60 + nowParts.minute;
+  const openMin = today.open[0]*60 + today.open[1];
+  const closeMin = today.close[0]*60 + today.close[1];
+
+  if(nowMin < openMin){
+    // Opens later today
+    target.textContent = `Closed · Opens at ${fmtTime(today.open)}`;
+  } else if(nowMin >= openMin && nowMin < closeMin){
+    // Open now
+    target.textContent = `Open now · Closes at ${fmtTime(today.close)}`;
+  } else {
+    // After closing
+    const next = nextOpenFrom(nowParts.dayIdx);
+    if(next){
+      const tomorrowIdx = (nowParts.dayIdx + 1) % 7;
+      if(next.dayIdx === tomorrowIdx){
+        target.textContent = `Closed · Opens tomorrow at ${fmtTime(next.opening)}`;
+      } else {
+        // Fallback for multi-day gaps (e.g., weekend)
+        target.textContent = `Closed · Opens ${dayNames[next.dayIdx]} at ${fmtTime(next.opening)}`;
+      }
+    } else {
+      target.textContent = 'Closed today';
+    }
+  }
+})();
+</script>
+
+</body>
+</html>
