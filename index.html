@@ -10,8 +10,15 @@
   :root{
     --brand:#800080; --brand-2:#9a329a; --gold:#e9cf7c;
     --ink:#0f172a; --muted:#6b7280; --line:#e9e9ee; --bg:#ffffff;
-    --radius:16px; --shadow-sm:0 8px 18px rgba(0,0,0,.06); --shadow-lg:0 24px 60px rgba(0,0,0,.12);
+    --radius:16px; --shadow-sm:0 8px 18px rgba(0,0,0,.06); --shadow-lg:0 24px 60px rgba(0,0,0,.12);z
+      --snap-offset: 114px;
   }
+  /* NEW — make the PAGE (not an inner element) the snap container */
+html{
+  scroll-snap-type: y proximity;              /* natural snap on vertical scroll */
+  scroll-padding-top: var(--snap-offset);     /* avoids hiding under sticky bars */
+}
+
   *{box-sizing:border-box}
   html,body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;color:var(--ink);background:var(--bg)}
   a{color:inherit;text-decoration:none}
@@ -86,23 +93,70 @@
   .step-pill.active{border-color:var(--brand);color:var(--brand)}
   .step-pill.active .dot{background:var(--brand)}
 
-  /* ===== Cinematic Step Panels ===== */
-  .steps-wrap{position:relative}
-  .panel{position:relative;min-height:92vh;margin:14px 0;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#000;scroll-margin-top:114px}
-  .panel .bg{position:absolute;inset:0}
-  .panel video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(1.08) contrast(1.05)}
-  .panel::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.45), rgba(0,0,0,.2) 35%, rgba(0,0,0,.55));pointer-events:none}
-  .panel .content{position:relative;z-index:1;color:#fff;display:grid;gap:12px;align-content:end;min-height:92vh;padding:28px}
-  .panel h2{margin:0;font-size:clamp(26px,4.6vw,46px);letter-spacing:.3px;text-shadow:0 2px 14px rgba(0,0,0,.5)}
-  .panel p{margin:0 0 8px;font-size:clamp(15px,2vw,18px);opacity:.95;max-width:820px}
-  .panel .meta{display:flex;gap:10px;flex-wrap:wrap}
-  .panel .meta .tag{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:6px 10px;font-weight:700}
-  .steps-wrap{scroll-snap-type:y mandatory}
-  .panel{scroll-snap-align:start}
-  @media (max-width:900px){
-    .steps-wrap{scroll-snap-type:x mandatory;display:grid;grid-auto-flow:column;grid-auto-columns:100%;overflow-x:auto}
-    .panel{min-height:84vh;scroll-snap-align:center}
-  }
+/* ===== Cinematic Step Panels ===== */
+.steps-wrap{
+  position: relative;
+  /* IMPORTANT: no inner scroll snapping here */
+}
+
+.panel{
+  position: relative;
+
+  /* Full-screen slides with outer margin */
+  min-height: 100svh;
+  margin: 14px 0;
+
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  overflow: hidden;
+  background: #000;
+
+  /* Snap each panel at the top of the viewport (page-level snap) */
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+
+  /* Respect sticky header + ribbon when using anchor jumps */
+  scroll-margin-top: var(--snap-offset);
+}
+
+.panel .bg{ position:absolute; inset:0; }
+.panel video{
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit: cover; filter: saturate(1.08) contrast(1.05);
+}
+
+/* Keep your cinematic overlay */
+.panel::after{
+  content:""; position:absolute; inset:0;
+  background: linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,.2) 35%, rgba(0,0,0,.55));
+  pointer-events: none;
+}
+
+/* Content fills viewport with breathing room */
+.panel .content{
+  position: relative; z-index: 1; color:#fff; display:grid; gap:12px; align-content:end;
+
+  min-height: 100svh;
+
+  /* horizontal padding same as before, vertical gets comfy spacing */
+  padding: 0 28px;
+  padding-block: clamp(28px, 8vh, 84px);
+}
+
+.panel h2{
+  margin:0; font-size:clamp(26px,4.6vw,46px); letter-spacing:.3px;
+  text-shadow:0 2px 14px rgba(0,0,0,.5);
+}
+.panel p{
+  margin:0 0 8px; font-size:clamp(15px,2vw,18px); opacity:.95; max-width:820px;
+}
+
+/* Optional: short screens ease margins/padding to reduce jitter */
+@media (max-height:640px){
+  .panel{ margin: 10px 0; }
+  .panel .content{ padding-block: clamp(20px, 7vh, 64px); }
+}
+
 
   /* Label card with subtle 3D */
   .label-card{position:absolute;right:18px;top:18px;background:rgba(255,255,255,.92);backdrop-filter:blur(4px);border:1px solid var(--line);border-radius:14px;padding:12px;box-shadow:var(--shadow-lg);color:#111827;transform:perspective(600px) rotateY(-8deg);transform-origin:right center;transition:transform .3s ease}
