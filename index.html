@@ -173,6 +173,103 @@ nav{display:flex;align-items:center;justify-content:center}
 .footer-bottom-inner{display:flex;align-items:center;justify-content:space-between;gap:20px}
 .footer-bottom a{color:#999;margin-left:14px}
 .footer-bottom a:hover{color:#fff}
+
+
+  /* === Section 2 === */
+#event{
+  background:#fff;              /* white background */
+  color:var(--ink);
+  width:100%;
+  position:relative;
+  padding: clamp(32px, 6vw, 72px) 16px;
+}
+
+#event .event-grid{
+  display:grid;
+  grid-template-columns: 1.05fr 1fr;  /* left heavier than right */
+  gap: clamp(16px, 3vw, 28px);
+  align-items: center;
+  max-width: 1400px;                   /* prevent ultra-wide line length */
+  margin: 0 auto;
+}
+
+#event .event-copy{
+  display:grid;
+  gap: 10px;
+  align-content:start;
+}
+
+#event .event-title{
+  margin:0;
+  font-weight:900;
+  font-size:clamp(24px, 4.2vw, 36px);
+  line-height:1.1;
+}
+
+#event .event-sub{
+  margin:0 0 8px;
+  color:var(--muted);
+  font-size:clamp(14px, 2.2vw, 18px);
+}
+
+/* Countdown tiles */
+#event .event-timer{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:6px;
+}
+#event .event-tile{
+  min-width:92px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  background:#fff;
+  box-shadow:var(--shadow-sm);
+  padding:12px 12px 10px;
+  text-align:center;
+}
+#event .event-tile strong{
+  display:block;
+  font-weight:900;
+  font-size:26px;
+  line-height:1;
+}
+#event .event-tile span{
+  display:block;
+  font-size:12px;
+  letter-spacing:.6px;
+  color:#6b7280;
+  margin-top:6px;
+}
+
+/* RIGHT column media */
+#event .event-media{
+  margin:0;
+  border-radius: var(--radius);
+  overflow:hidden;
+  box-shadow: var(--shadow-lg);
+  display:block;
+  height:100%;
+  /* helps prevent image from dwarfing text on very tall screens */
+  max-height: 720px;
+}
+#event .event-media img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+/* Responsive stack on narrower screens */
+@media (max-width: 960px){
+  #event .event-grid{
+    grid-template-columns: 1fr;
+  }
+  #event .event-media{
+    max-height: 52vh; /* keep it tasteful when stacked */
+  }
+}
+
 </style>
 </head>
 <body>
@@ -266,6 +363,48 @@ nav{display:flex;align-items:center;justify-content:center}
     </div>
   </div>
 </section>
+
+  <!-- Section 2 -->
+<section id="event" aria-label="Wine Tasting Event">
+  <div class="event-grid">
+    <!-- LEFT: copy + countdown -->
+    <div class="event-copy" id="eventCopy">
+      <h2 class="event-title">Wine Tasting Event</h2>
+      <p class="event-sub">Sip, swirl, and savor — reserve your spot today!</p>
+
+      <div class="event-timer" id="eventTimer" aria-live="polite">
+        <div class="event-tile">
+          <strong id="evD">00</strong>
+          <span>DAYS</span>
+        </div>
+        <div class="event-tile">
+          <strong id="evH">00</strong>
+          <span>HOURS</span>
+        </div>
+        <div class="event-tile">
+          <strong id="evM">00</strong>
+          <span>MINUTES</span>
+        </div>
+        <div class="event-tile">
+          <strong id="evS">00</strong>
+          <span>SECONDS</span>
+        </div>
+      </div>
+
+      <a class="btn primary" href="https://kakatbarilea-prog.github.io/mwwu-generic-event-template/.." style="margin-top:12px;">See all Dates</a>
+    </div>
+
+    <!-- RIGHT: image -->
+    <figure class="event-media" id="eventMedia">
+      <img
+        src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/class_course_featured_1729169935335.png"
+        alt="Guests tasting wine"
+        id="eventImg"
+      />
+    </figure>
+  </div>
+</section>
+
 
 <!-- Footer (full width, unchanged) -->
 <footer class="site-footer">
@@ -492,6 +631,68 @@ nav{display:flex;align-items:center;justify-content:center}
     }
   }());
 })();
+
+  /* === Section 2 === */
+
+  // 1) Countdown
+  (function initEventCountdown(){
+    // Use local time at midnight; adjust if you need a specific hour
+    const target = new Date('2025-11-08T00:00:00');
+    const ids = { d:'evD', h:'evH', m:'evM', s:'evS' };
+
+    function pad(n){ return String(n).padStart(2,'0'); }
+
+    function tick(){
+      const now = new Date();
+      let diff = Math.max(0, target - now);
+
+      const d = Math.floor(diff / 86400000); diff -= d*86400000;
+      const h = Math.floor(diff /   3600000); diff -= h*3600000;
+      const m = Math.floor(diff /     60000); diff -= m*60000;
+      const s = Math.floor(diff /      1000);
+
+      const D = document.getElementById(ids.d);
+      const H = document.getElementById(ids.h);
+      const M = document.getElementById(ids.m);
+      const S = document.getElementById(ids.s);
+
+      if(D){ D.textContent = pad(d); }
+      if(H){ H.textContent = pad(h); }
+      if(M){ M.textContent = pad(m); }
+      if(S){ S.textContent = pad(s); }
+    }
+
+    tick();
+    setInterval(tick, 1000);
+  }());
+
+  // 2) Balance right image height with left content height
+  (function balanceEventImage(){
+    const copy = document.getElementById('eventCopy');
+    const media = document.getElementById('eventMedia');
+
+    function sizeMedia(){
+      if(!copy || !media) return;
+      const leftH = copy.offsetHeight;
+
+      // Only enforce when in two-column layout (not on stacked mobile)
+      const twoCol = window.matchMedia('(min-width: 961px)').matches;
+      if(twoCol){
+        media.style.height = leftH + 'px';
+      }else{
+        media.style.height = 'auto';
+      }
+    }
+
+    // run on load/resize (and after fonts/layout settle)
+    window.addEventListener('load', sizeMedia);
+    window.addEventListener('resize', sizeMedia);
+
+    // small RAF to catch any late layout shifts (fonts)
+    requestAnimationFrame(()=> requestAnimationFrame(sizeMedia));
+  }());
+
+  
 </script>
 </body>
 </html>
