@@ -289,6 +289,90 @@ nav{display:flex;align-items:center;justify-content:center}
   }
 }
 
+  /* === Section 3 === */
+#feels.feels-compact{
+  background:#fff;
+  color:var(--ink);
+  width:100%;
+  padding: clamp(20px, 4vw, 40px) 0;
+}
+#feels .feels-head{
+  text-align:center;
+  padding: 0 16px;
+  margin: 0 auto clamp(10px, 2.5vw, 16px);
+  max-width: 900px;
+}
+#feels .feels-title{ margin:0 0 6px; font-weight:800; font-size: clamp(18px, 2.6vw, 24px); }
+#feels .feels-sub{ margin:0; color:var(--muted); font-size: clamp(13px, 1.9vw, 16px); }
+
+.filmstrip-wrap{
+  position:relative;
+}
+
+/* arrows */
+.strip-arrow{
+  position:absolute; top:50%; transform:translateY(-50%);
+  z-index:2;
+  width:42px; height:42px; border-radius:50%;
+  border:1px solid var(--line); background:#fff;
+  box-shadow:0 6px 16px rgba(0,0,0,.10);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; transition:transform .15s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.strip-arrow:hover{ transform:translateY(-50%) scale(1.05); box-shadow:0 10px 24px rgba(0,0,0,.14); border-color:#ddd; }
+.strip-arrow.left{ left:8px; }
+.strip-arrow.right{ right:8px; }
+.strip-arrow i{ pointer-events:none; }
+
+.filmstrip{
+  --thumb-h: 160px;               /* desktop row height */
+  display:flex;
+  gap: 8px;
+  list-style:none;
+  margin: 0;
+  padding: 0 56px;                /* space for arrows */
+  overflow-x:auto;
+  overflow-y:hidden;
+  scroll-behavior:smooth;         /* smooth programmatic scroll */
+  scrollbar-width:none;           /* hide FF scrollbar */
+}
+.filmstrip::-webkit-scrollbar{ display:none; } /* hide WebKit scrollbar */
+@media (max-width: 1024px){ .filmstrip{ --thumb-h: 130px; } }
+@media (max-width: 640px){  .filmstrip{ --thumb-h: 110px; } }
+
+.filmstrip .shot{
+  flex: 0 0 auto;
+  width: calc(var(--thumb-h) * 16 / 9);   /* enforce 16:9 */
+  height: var(--thumb-h);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transform: translateZ(0);
+}
+.filmstrip .shot img{
+  width:100%; height:100%; object-fit:cover;
+  transition: transform .25s ease, filter .25s ease;
+}
+.filmstrip .shot:hover img{
+  transform: scale(1.05);
+  filter: saturate(1.06) contrast(1.04);
+}
+
+/* optional: light edge fades (kept subtle to not fight arrows) */
+.filmstrip-wrap.has-arrows::before,
+.filmstrip-wrap.has-arrows::after{
+  content:""; position:absolute; top:0; bottom:0; width:40px; pointer-events:none; z-index:1;
+}
+.filmstrip-wrap.has-arrows::before{
+  left:0; background:linear-gradient(90deg,#fff,rgba(255,255,255,0));
+}
+.filmstrip-wrap.has-arrows::after{
+  right:0; background:linear-gradient(270deg,#fff,rgba(255,255,255,0));
+}
+
+
+
+  
 </style>
 </head>
 <body>
@@ -424,6 +508,48 @@ nav{display:flex;align-items:center;justify-content:center}
     </figure>
   </div>
 </section>
+
+
+<!-- Section 3: What it feels like (arrowed, looping carousel) -->
+<section id="feels" class="feels-compact" aria-label="What it feels like">
+  <div class="feels-head">
+    <h2 class="feels-title">What it feels like</h2>
+    <p class="feels-sub">A living wall from crush nights, racking weekends, and bottling day.</p>
+  </div>
+
+  <div class="filmstrip-wrap has-arrows">
+    <button class="strip-arrow left" type="button" aria-label="Previous">
+      <i class="fa fa-chevron-left" aria-hidden="true"></i>
+    </button>
+    <button class="strip-arrow right" type="button" aria-label="Next">
+      <i class="fa fa-chevron-right" aria-hidden="true"></i>
+    </button>
+
+    <ul class="filmstrip" id="feelsStrip" role="list">
+      <!-- ORIGINAL SET (we’ll clone these via JS for seamless looping) -->
+      <li class="shot"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860246123.png"  alt=""></li>
+      <li class="shot"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860172646.png"  alt=""></li>
+      <li class="shot"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860216146.png"  alt=""></li>
+      <li class="shot"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860262126.png"  alt=""></li>
+      <li class="shot"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860200388.png"  alt=""></li>
+      <li class="shot"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860233023.png"  alt=""></li>
+      <li class="shot"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860315613.png"  alt=""></li>
+      <li class="shot"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1707238489062.JPG" alt=""></li>
+      <li class="shot"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1707238506272.JPG" alt=""></li>
+      <li class="shot"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1707238517950.jpg" alt=""></li>
+      <li class="shot"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1707238534009.jpg" alt=""></li>
+      <li class="shot"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1707238545050.jpg" alt=""></li>
+      <li class="shot"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1707238555384.jpg" alt=""></li>
+      <li class="shot"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1707238565075.jpg" alt=""></li>
+      <li class="shot"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1707238574160.jpg" alt=""></li>
+      <li class="shot"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1707238582580.jpg" alt=""></li>
+      <li class="shot"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1707238592670.JPG" alt=""></li>
+      <li class="shot"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1707238602556.JPG" alt=""></li>
+      <li class="shot"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1707238611384.jpg" alt=""></li>
+    </ul>
+  </div>
+</section>
+
 
 
 <!-- Footer (full width, unchanged) -->
@@ -686,7 +812,108 @@ nav{display:flex;align-items:center;justify-content:center}
     setInterval(tick, 1000);
   }());
 
+(function feelsCarousel(){
+  const strip = document.getElementById('feelsStrip');
+  if(!strip) return;
 
+  const BTN_LEFT  = document.querySelector('#feels .strip-arrow.left');
+  const BTN_RIGHT = document.querySelector('#feels .strip-arrow.right');
+
+  // 1) Clone images to the front and back so scrolling can loop seamlessly.
+  const originals = Array.from(strip.children);
+  const cloneSetA = originals.map(li => li.cloneNode(true));
+  const cloneSetB = originals.map(li => li.cloneNode(true));
+  cloneSetA.forEach(c => strip.appendChild(c));   // append
+  cloneSetB.forEach(c => strip.insertBefore(c, strip.firstChild)); // prepend
+
+  // 2) Jump to the middle block so we can scroll both ways.
+  function itemWidth(){
+    const first = strip.querySelector('.shot');
+    if(!first) return 0;
+    const rect = first.getBoundingClientRect();
+    // include the gap (8px) by reading computed gap if available
+    const style = getComputedStyle(strip);
+    const gap = parseFloat(style.columnGap || style.gap || 8);
+    return rect.width + gap;
+  }
+
+  function jumpToMiddle(){
+    const w = itemWidth();
+    const count = originals.length;
+    strip.scrollLeft = w * count; // start at the first item in the middle block
+  }
+
+  // 3) Keep the scroll position in the middle block (loop effect).
+  function normalize(){
+    const w = itemWidth();
+    const count = originals.length;
+    const total = w * (count * 3);
+    const min = 0;
+    const left = strip.scrollLeft;
+
+    const leftEdge  = w * 0.5;                // near start of first block
+    const rightEdge = w * (count * 2.5);      // near end of last block
+
+    if(left < leftEdge){
+      // jumped too far left -> move forward by one block
+      strip.scrollLeft = left + (w * count);
+    }else if(left > rightEdge){
+      // jumped too far right -> move back by one block
+      strip.scrollLeft = left - (w * count);
+    }
+  }
+
+  // 4) Controls
+  function stepNext(n=1){
+    strip.scrollBy({ left: itemWidth() * n, behavior:'smooth' });
+  }
+  function stepPrev(n=1){
+    strip.scrollBy({ left: -itemWidth() * n, behavior:'smooth' });
+  }
+
+  BTN_RIGHT && BTN_RIGHT.addEventListener('click', ()=> stepNext(1));
+  BTN_LEFT  && BTN_LEFT .addEventListener('click', ()=> stepPrev(1));
+
+  // 5) Autoplay
+  let autoplay = null;
+  const INTERVAL_MS = 2800;
+
+  function startAuto(){
+    if(autoplay) return;
+    autoplay = setInterval(()=> stepNext(1), INTERVAL_MS);
+  }
+  function stopAuto(){
+    if(autoplay){ clearInterval(autoplay); autoplay = null; }
+  }
+
+  // Pause on hover/focus, resume on leave
+  strip.addEventListener('mouseenter', stopAuto);
+  strip.addEventListener('mouseleave', startAuto);
+  strip.addEventListener('focusin',   stopAuto);
+  strip.addEventListener('focusout',  startAuto);
+
+  // Also pause when tab/window not visible
+  document.addEventListener('visibilitychange', ()=>{
+    if(document.hidden) stopAuto(); else startAuto();
+  });
+
+  // Normalize position as we scroll (after smooth scroll finishes)
+  strip.addEventListener('scroll', ()=>{
+    // throttle normalize slightly
+    if(normalize._raf) cancelAnimationFrame(normalize._raf);
+    normalize._raf = requestAnimationFrame(normalize);
+  });
+
+  // Init after images have laid out
+  window.addEventListener('load', ()=>{
+    jumpToMiddle();
+    startAuto();
+  });
+  window.addEventListener('resize', ()=>{
+    // keep current index roughly centered after resize
+    jumpToMiddle();
+  });
+})();
 
   
 </script>
