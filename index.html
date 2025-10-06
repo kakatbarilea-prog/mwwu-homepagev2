@@ -241,24 +241,43 @@ nav{display:flex;align-items:center;justify-content:center}
   color:#6b7280;
   margin-top:6px;
 }
+/* Text-style "See all Dates" link */
+.event-link {
+  display:inline-block;
+  color:var(--brand);
+  font-weight:800;
+  text-decoration:none;
+  font-size:15px;
+  transition:color .25s ease;
+}
+.event-link:hover {
+  color:var(--brand-2);
+  text-decoration:underline;
+}
 
 /* RIGHT column media */
+/* Enforce a true 16:9 frame for the event image */
 #event .event-media{
-  margin:0;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;         /* modern browsers keep 16×9 box */
+  height: auto;                  /* don't force a fixed height */
+  max-height: none;              /* remove previous cap */
   border-radius: var(--radius);
-  overflow:hidden;
+  overflow: hidden;
   box-shadow: var(--shadow-lg);
-  display:block;
-  height:100%;
-  /* helps prevent image from dwarfing text on very tall screens */
-  max-height: 720px;
 }
+
 #event .event-media img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;             /* perfectly fill the 16×9 frame */
+  display: block;
 }
+
+
 
 /* Responsive stack on narrower screens */
 @media (max-width: 960px){
@@ -369,7 +388,7 @@ nav{display:flex;align-items:center;justify-content:center}
   <div class="event-grid">
     <!-- LEFT: copy + countdown -->
     <div class="event-copy" id="eventCopy">
-      <h2 class="event-title">Wine Tasting Event</h2>
+      <h2 class="event-title">Upcoming Wine Tasting Event</h2>
       <p class="event-sub">Sip, swirl, and savor — reserve your spot today!</p>
 
       <div class="event-timer" id="eventTimer" aria-live="polite">
@@ -391,7 +410,8 @@ nav{display:flex;align-items:center;justify-content:center}
         </div>
       </div>
 
-      <a class="btn primary" href="https://kakatbarilea-prog.github.io/mwwu-generic-event-template/.." style="margin-top:12px;">See all Dates</a>
+      <a class="event-link" href="https://kakatbarilea-prog.github.io/mwwu-generic-event-template/.." style="margin-top:12px;">See all Dates →</a>
+
     </div>
 
     <!-- RIGHT: image -->
@@ -666,31 +686,7 @@ nav{display:flex;align-items:center;justify-content:center}
     setInterval(tick, 1000);
   }());
 
-  // 2) Balance right image height with left content height
-  (function balanceEventImage(){
-    const copy = document.getElementById('eventCopy');
-    const media = document.getElementById('eventMedia');
 
-    function sizeMedia(){
-      if(!copy || !media) return;
-      const leftH = copy.offsetHeight;
-
-      // Only enforce when in two-column layout (not on stacked mobile)
-      const twoCol = window.matchMedia('(min-width: 961px)').matches;
-      if(twoCol){
-        media.style.height = leftH + 'px';
-      }else{
-        media.style.height = 'auto';
-      }
-    }
-
-    // run on load/resize (and after fonts/layout settle)
-    window.addEventListener('load', sizeMedia);
-    window.addEventListener('resize', sizeMedia);
-
-    // small RAF to catch any late layout shifts (fonts)
-    requestAnimationFrame(()=> requestAnimationFrame(sizeMedia));
-  }());
 
   
 </script>
