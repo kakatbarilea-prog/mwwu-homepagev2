@@ -548,8 +548,31 @@ nav{display:flex;align-items:center;justify-content:center}
 
 /* smooth page scrolling (used by “Contact Us” buttons) */
 html{ scroll-behavior:smooth; }
+/* Shared CTA row below both cards */
+.choose-actions.global-cta {
+  justify-content: center;
+  margin-top: clamp(20px, 4vw, 40px);
+  gap: 14px;
+}
+.choose-actions.global-cta .btn {
+  min-width: 220px;
+  font-weight: 800;
+}
 
-  
+  /* White button with purple text + border */
+.btn.white {
+  background: transparent;
+  color: var(--brand);
+  border: 2px solid var(--brand);
+  font-weight: 800;
+  transition: all 0.25s ease;
+}
+
+.btn.white:hover {
+  background: var(--brand);
+  color: #fff;
+}
+
 </style>
 </head>
 <body>
@@ -782,22 +805,22 @@ html{ scroll-behavior:smooth; }
     <article class="choose-card">
       <h3>For Individual Wine Lovers</h3>
       <p>Craft a signature vintage from grape to glass with hands-on guidance. Choose your varietal, join key sessions — crush, press, rack — then design your label and take home bottles you made yourself.</p>
-      <div class="choose-actions">
-        <a class="btn primary" href="https://makewinewithus.com/create-account">Start Winemaking</a>
-        <a class="btn white js-scroll-contact" href="#contact">Contact Us</a>
-      </div>
     </article>
 
     <!-- Card B -->
     <article class="choose-card">
       <h3>For Friends, Families &amp; Teams</h3>
       <p>Make it a shared vintage. Reserve a batch, pick your grapes, and return across the season for each milestone — ending with a celebratory bottling party where everyone leaves with custom-labeled wine.</p>
-      <div class="choose-actions">
-        <a class="btn primary" href="https://makewinewithus.com/private-events">Plan a Private Event</a>
-        <a class="btn white js-scroll-contact" href="#contact">Contact Us</a>
-      </div>
     </article>
   </div>
+
+  <!-- Shared CTA Buttons -->
+<div class="choose-actions global-cta">
+  <a class="btn primary" href="https://makewinewithus.com/create-account">Start Winemaking</a>
+  <a class="btn primary" href="https://makewinewithus.com/private-events">Plan a Private Event</a>
+  <a class="btn white js-scroll-contact" href="#contact">Contact Us</a>
+</div>
+
 </section>
 
 
