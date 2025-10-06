@@ -15,10 +15,18 @@
     /* measured via JS */
     --ann-h: 0px;   /* announcement height */
     --hdr-h: 64px;  /* header height */
+    --step-count: 6; /* updated by JS from steps.length */
+    --thumb-gap: 8px;
   }
 
   *{box-sizing:border-box}
   html,body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+
+  /* Only snap between the first two sections */
+  html{scroll-behavior:smooth; scroll-snap-type: y proximity;}
+  #hero, .countdown{scroll-snap-align:start}
+  /* all other sections do NOT declare snap-align, so they won't snap */
+
   a{color:inherit;text-decoration:none}
   img,video{max-width:100%;height:auto;display:block}
   .container{max-width:1200px;margin:0 auto;padding:0 16px}
@@ -31,10 +39,8 @@
   .pulse{animation:pulse 2.2s infinite}
   @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(128,0,128,.45)}70%{box-shadow:0 0 0 18px rgba(128,0,128,0)}100%{box-shadow:0 0 0 0 rgba(128,0,128,0)}}
 
-  /* ===== Sticky header (always visible) ===== */
-  header{border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:90;transition:top .15s ease}
-  /* While hero is in view, offset header beneath announcement */
-  .at-hero header{ top: var(--ann-h); }
+  /* ===== Sticky header (always visible; never overlaps the announcement) ===== */
+  header{border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:100}
   .bar{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;padding:14px 24px}
   .brand{display:flex;align-items:center;gap:12px;min-width:0}
   .brand img{height:56px;width:auto}
@@ -65,33 +71,29 @@
     .subnav{position:static;box-shadow:none;padding:6px 0}
   }
 
-  /* ===== Scroll snap ===== */
-  html{scroll-snap-type:y mandatory; scroll-behavior:smooth;}
-  section{scroll-snap-align:start}
-
-  /* ===== HERO SNAP (announcement + theater all in one screen) ===== */
+  /* ===== HERO ===== */
   #hero{height:100dvh; position:relative; background:#000; color:#fff; overflow:hidden}
-  /* Announcement is INSIDE the hero and sticky at the very top of the viewport while hero is in view */
-  #hero .announce{position:sticky; top:0; z-index:95; background:var(--brand); color:#fff; font-size:14px; line-height:1.35}
+  /* Announcement sticks directly UNDER the header (no overlap) */
+  #hero .announce{position:sticky; top:var(--hdr-h); z-index:95; background:var(--brand); color:#fff; font-size:14px; line-height:1.35}
   .announce-inner{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:10px 0}
   .announce a{color:#fff;text-decoration:underline}
 
-  /* Theater fills the space below header+announcement (header is outside; we subtract both). */
+  /* Theater fills space below header + announcement */
   #steps.theater{
     position:absolute; inset:0 0 0 0;
-    height:calc(100dvh - var(--ann-h) - var(--hdr-h));
-    top:calc(var(--ann-h) + var(--hdr-h));
+    height:calc(100dvh - var(--hdr-h) - var(--ann-h));
+    top:calc(var(--hdr-h) + var(--ann-h));
     background:#000; color:#fff; isolation:isolate; overflow:hidden;
   }
   .stage{position:relative;height:100%}
   .stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(1.08) contrast(1.05)}
   .stage .scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.50),rgba(0,0,0,.25) 40%,rgba(0,0,0,.7))}
 
-  /* Step copy: top-left with more left padding */
+  /* Copy */
   .stage .copy{
     position:absolute; left:clamp(28px, 6vw, 72px); right:auto; top:16px;
     max-width:min(64ch, 56vw); z-index:2; display:grid; gap:10px; text-align:left;
-    padding-bottom:180px; /* ensures CTAs don’t overlap thumbnails */
+    padding-bottom:180px;
   }
   .stage .meta{font-weight:800;letter-spacing:.2px;opacity:.98;margin-bottom:2px}
   .stage h2{margin:0;font-size:clamp(34px,6.6vw,68px);line-height:1.05;text-shadow:0 2px 18px rgba(0,0,0,.6)}
@@ -100,27 +102,17 @@
   .stage .ctas .btn{min-width:190px}
   @media (max-width:720px){ .stage .copy{max-width:92vw} }
 
-  /* Step navigation arrows: anchored to the STAGE (current step), not thumbnails */
-  .step-arrows .arrow{
-    position:absolute; top:50%; transform:translateY(-50%); z-index:4;
-    width:44px; height:44px; border-radius:50%;
-    display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,.92);
-    color:#111; border:1px solid rgba(255,255,255,.95); cursor:pointer;
-  }
-  .step-arrows .arrow.left{ left:12px }
-  .step-arrows .arrow.right{ right:12px }
-
-  /* Thumbnails bar */
+  /* ===== Thumbnails (auto-fit all steps; no arrows) ===== */
   .thumbs{
     position:absolute; left:0; right:0; bottom:12px; z-index:3;
-    display:flex; gap:10px; padding:0 16px; overflow:auto; scrollbar-width:none
+    display:flex; gap:var(--thumb-gap); padding:0 16px;
   }
-  .thumbs::-webkit-scrollbar{display:none}
   .thumb{
-    position:relative; min-width:220px; max-width:260px; flex:0 0 auto; border-radius:12px; overflow:hidden;
+    position:relative; flex: 1 1 calc((100% - (var(--step-count) - 1)*var(--thumb-gap)) / var(--step-count));
+    min-width:0; border-radius:12px; overflow:hidden;
     border:2px solid transparent; transition:border-color .2s ease, transform .2s ease; background:#111
   }
-  .thumb video{width:100%;height:124px;object-fit:cover}
+  .thumb video{width:100%; aspect-ratio: 16/9; object-fit:cover}
   .thumb .label{
     position:absolute;left:10px;bottom:10px;background:rgba(255,255,255,.92);
     color:#111; padding:6px 10px;border-radius:999px;font-weight:800;display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.95)
@@ -128,7 +120,7 @@
   .thumb[aria-current="true"]{border-color:var(--brand);transform:translateY(-2px)}
   .thumb:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 
-  /* ===== Event Countdown (restored) ===== */
+  /* ===== Event Countdown ===== */
   .countdown{position:relative;background:linear-gradient(180deg,#faf7fb,#fff);padding: clamp(28px,6vw,64px) 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
   .count-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:20px;align-items:center}
   .timer{display:flex;gap:10px;flex-wrap:wrap}
@@ -221,7 +213,7 @@
 </head>
 <body>
 
-  <!-- Sticky header (site-wide) -->
+  <!-- Sticky header -->
   <header id="siteHeader">
     <div class="container bar">
       <a class="brand" href="#" aria-label="Make Wine With Us — Home">
@@ -263,9 +255,9 @@
     </div>
   </header>
 
-  <!-- ===== HERO SNAP (Announcement + Theater in ONE snap) ===== -->
+  <!-- ===== HERO ===== -->
   <section id="hero" aria-label="Hero">
-    <!-- Announcement lives inside the hero and is part of the first screen -->
+    <!-- Announcement stays just beneath the header -->
     <div class="announce" id="announce">
       <div class="container announce-inner">
         <div>🏅 Our winemakers clinched <strong>Best Red</strong> at the 2025 Garden State Amateur Wine Challenge — congratulations!</div>
@@ -279,11 +271,7 @@
         <video id="stageVideo" playsinline muted autoplay loop></video>
         <div class="scrim" aria-hidden="true"></div>
 
-        <!-- step arrows are on the STAGE (current step), not thumbnails -->
-        <div class="step-arrows" aria-hidden="false">
-          <button class="arrow left" id="arrowLeft" type="button" aria-label="Previous step" style="display:none"><i class="fa fa-chevron-left"></i></button>
-          <button class="arrow right" id="arrowRight" type="button" aria-label="Next step"><i class="fa fa-chevron-right"></i></button>
-        </div>
+        <!-- (arrows removed by request) -->
 
         <div class="copy">
           <div class="meta" id="metaLine">Step 1 of 6: California • Italy • Chile</div>
@@ -296,7 +284,7 @@
         </div>
       </div>
 
-      <!-- Thumbnails -->
+      <!-- Thumbnails (auto-fit) -->
       <div class="thumbs" id="thumbs" role="tablist" aria-label="Winemaking steps"></div>
 
       <!-- Fullscreen modal player -->
@@ -307,7 +295,7 @@
     </section>
   </section>
 
-  <!-- ===== Event Countdown (restored) ===== -->
+  <!-- ===== Event Countdown ===== -->
   <section class="countdown" aria-label="Upcoming tasting">
     <div class="container count-grid">
       <div>
@@ -471,7 +459,7 @@
 (function(){
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* Measure announcement + header heights so the theater can size/position perfectly */
+  /* Measure header + announcement heights so the theater positions perfectly under them */
   function setHeights(){
     const ann = document.getElementById('announce');
     const hdr = document.getElementById('siteHeader');
@@ -480,16 +468,8 @@
     document.documentElement.style.setProperty('--ann-h', annH + 'px');
     document.documentElement.style.setProperty('--hdr-h', hdrH + 'px');
   }
-  window.addEventListener('load', setHeights);
+  window.addEventListener('load', setHeights, {once:true});
   window.addEventListener('resize', setHeights);
-
-  /* Add .at-hero while the hero is onscreen so header sits under the announcement only there */
-  const hero = document.getElementById('hero');
-  const heroObs = new IntersectionObserver(([e])=>{
-    if(e.isIntersecting){ document.documentElement.classList.add('at-hero'); }
-    else { document.documentElement.classList.remove('at-hero'); }
-  },{threshold:0.6});
-  heroObs.observe(hero);
 
   /* Ripple microinteraction */
   document.addEventListener('click', e=>{
@@ -500,7 +480,7 @@
   /* Mosaic shuffle (optional subtle motion) */
   const grid = document.getElementById('mosaicGrid');
   if(grid){
-    function shuffle(){ const tiles=[...grid.children]; for(let i=tiles.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); if(j!==i) grid.insertBefore(tiles[j], tiles[i]); } }
+    function shuffle(){ const tiles=[...grid.children]; for(let i=tiles.length-1;i>0;i++){ const j=Math.floor(Math.random()*(i+1)); if(j!==i) grid.insertBefore(tiles[j], tiles[i]); } }
     let t = setInterval(shuffle, 6000); grid.addEventListener('pointerenter', ()=>clearInterval(t)); grid.addEventListener('pointerleave', ()=>{t=setInterval(shuffle,6000)});
   }
 
@@ -532,6 +512,7 @@
     }
   ];
   const labelMap = { select:'Select', crush:'Crush', rack:'Rack', age:'Age', bottle:'Bottle', label:'Label' };
+  document.documentElement.style.setProperty('--step-count', steps.length);
 
   const stageVideo = document.getElementById('stageVideo');
   const metaLine = document.getElementById('metaLine');
@@ -543,10 +524,8 @@
   const modal = document.getElementById('modal');
   const modalVideo = document.getElementById('modalVideo');
   const closeModal = document.getElementById('closeModal');
-  const arrowLeft = document.getElementById('arrowLeft');
-  const arrowRight = document.getElementById('arrowRight');
 
-  // Build thumbnails — previews only (no autoplay)
+  // Build thumbnails — previews only (no autoplay). Auto-fit via CSS.
   steps.forEach((s, i)=>{
     const btn = document.createElement('button');
     btn.className = 'thumb';
@@ -566,10 +545,6 @@
   });
 
   let idx = 0;
-  function updateArrows(){
-    arrowLeft.style.display  = (idx > 0) ? 'flex' : 'none';
-    arrowRight.style.display = (idx < steps.length - 1) ? 'flex' : 'none';
-  }
 
   function setStep(i){
     idx = (i+steps.length)%steps.length;
@@ -594,12 +569,7 @@
     }
 
     [...thumbs.querySelectorAll('.thumb')].forEach((t,j)=> t.setAttribute('aria-current', j===idx ? 'true' : 'false'));
-    updateArrows();
   }
-
-  // Arrow navigation (on the stage/current step)
-  arrowLeft.addEventListener('click', ()=> setStep(idx-1));
-  arrowRight.addEventListener('click', ()=> setStep(idx+1));
 
   // CTA buttons
   playBtn.addEventListener('click', ()=>{
@@ -624,9 +594,10 @@
   });
 
   // Init
+  setHeights();
   setStep(0);
 
-  /* Simple countdown demo */
+  /* Simple countdown */
   const target = new Date('2025-09-20T13:00:00-04:00');
   function fmt(n){return String(n).padStart(2,'0');}
   function tickTimer(){
@@ -659,7 +630,7 @@
     if(res) res.textContent = 'Recommended: '+ (map[o.value]||'');
   }));
 
-  /* Footer dynamic hours (America/New_York) */
+ /* Footer dynamic hours (America/New_York) */
   (function(){
     const tz = 'America/New_York';
     const schedule = [null,null,{open:[13,0], close:[17,0]},{open:[13,0], close:[18,0]},{open:[13,0], close:[18,0]},{open:[13,0], close:[18,0]},null];
