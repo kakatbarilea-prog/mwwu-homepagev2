@@ -440,6 +440,114 @@ nav{display:flex;align-items:center;justify-content:center}
   padding: 0 6px;
 }
 
+/* === Section 5: Choose your way === */
+#paths.choose{
+  background:#fff;
+  color:var(--ink);
+  width:100%;
+  padding: clamp(28px, 6vw, 64px) 16px;
+}
+#paths .choose-head{
+  text-align:center;
+  margin:0 auto clamp(18px, 3vw, 28px);
+  max-width: 900px;
+}
+#paths .choose-title{ margin:0 0 6px; font-weight:800; font-size:clamp(20px, 2.8vw, 26px); }
+#paths .choose-sub{ margin:0; color:var(--muted); font-size:clamp(13px, 1.9vw, 16px); }
+
+.choose-grid{
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: clamp(16px, 3vw, 28px);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+@media (max-width: 900px){ .choose-grid{ grid-template-columns:1fr; } }
+
+.choose-card{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius: 20px;
+  box-shadow: var(--shadow-sm);
+  padding: clamp(16px, 3.2vw, 26px);
+  display:grid; gap:12px;
+}
+.choose-card h3{ margin:0; font-weight:900; font-size: clamp(18px, 2.4vw, 22px); }
+.choose-card p{ margin:0; color:#374151; font-size: clamp(14px, 2vw, 16px); line-height:1.55; }
+
+.choose-actions{
+  display:flex; flex-wrap:wrap; gap:10px; justify-content:center;
+  margin-top:6px;
+}
+.choose-actions .btn{ min-width:200px; }
+
+/* white contact button */
+.btn.white{ background:#fff; border-color:var(--line); color:#111827; }
+.btn.white:hover{ border-color:var(--brand); color:var(--brand); }
+
+/* === Section 6: Contact === */
+#contact.contact{
+  position:relative;
+  width:100%;
+  padding: clamp(28px, 6vw, 68px) 16px;
+  color:#111;
+  overflow:hidden;
+  isolation:isolate;
+}
+#contact.contact::before{
+  /* background image + purple overlay */
+  content:"";
+  position:absolute; inset:0;
+  background:
+    linear-gradient(180deg, rgba(128,0,128,.55), rgba(154,50,154,.55)),
+    url('https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/1672830334412.png') center/cover no-repeat;
+  z-index:-2;
+}
+#contact .contact-inner{
+  max-width: 1400px; margin:0 auto;
+  display:grid; gap: clamp(16px, 3vw, 28px);
+  grid-template-columns: 1.05fr 1fr;
+}
+@media (max-width: 980px){ #contact .contact-inner{ grid-template-columns:1fr; } }
+
+/* left photo */
+.contact-photo{
+  background:#fff; border-radius:24px; overflow:hidden;
+  box-shadow: var(--shadow-lg);
+}
+.contact-photo img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+/* right form card */
+.contact-card{
+  background: rgba(255,255,255,.95);
+  border: 1px solid rgba(255,255,255,.8);
+  border-radius:24px;
+  box-shadow: var(--shadow-lg);
+  padding: clamp(16px, 3vw, 28px);
+}
+.contact-card h3{ margin:0 0 8px; font-weight:900; font-size: clamp(18px, 2.6vw, 24px); }
+
+.contact-grid{
+  display:grid; gap:12px;
+  grid-template-columns: 1fr 1fr;
+}
+.contact-grid .full{ grid-column: 1 / -1; }
+
+.input, .textarea{
+  width:100%;
+  height:42px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:10px 12px;
+  font:inherit; color:inherit; background:#fff;
+}
+.textarea{ height:140px; resize:vertical; }
+
+/* submit button look */
+#contact .btn.primary{ min-width: 200px; }
+
+/* smooth page scrolling (used by “Contact Us” buttons) */
+html{ scroll-behavior:smooth; }
 
   
 </style>
@@ -662,7 +770,85 @@ nav{display:flex;align-items:center;justify-content:center}
   </ul>
 </section>
 
+<!-- Section 5 -->
+<section id="paths" class="choose" aria-label="Choose how you make wine">
+  <div class="choose-head">
+    <h2 class="choose-title">Make wine your way — solo or together</h2>
+    <p class="choose-sub">Whether you’re creating your personal vintage or blending with a group, each visit brings your story to life through crushing, pressing, racking, and custom bottling your own wines.</p>
+  </div>
 
+  <div class="choose-grid">
+    <!-- Card A -->
+    <article class="choose-card">
+      <h3>For Individual Wine Lovers</h3>
+      <p>Craft a signature vintage from grape to glass with hands-on guidance. Choose your varietal, join key sessions — crush, press, rack — then design your label and take home bottles you made yourself.</p>
+      <div class="choose-actions">
+        <a class="btn primary" href="https://makewinewithus.com/create-account">Start Winemaking</a>
+        <a class="btn white js-scroll-contact" href="#contact">Contact Us</a>
+      </div>
+    </article>
+
+    <!-- Card B -->
+    <article class="choose-card">
+      <h3>For Friends, Families &amp; Teams</h3>
+      <p>Make it a shared vintage. Reserve a batch, pick your grapes, and return across the season for each milestone — ending with a celebratory bottling party where everyone leaves with custom-labeled wine.</p>
+      <div class="choose-actions">
+        <a class="btn primary" href="https://makewinewithus.com/private-events">Plan a Private Event</a>
+        <a class="btn white js-scroll-contact" href="#contact">Contact Us</a>
+      </div>
+    </article>
+  </div>
+</section>
+
+
+
+<!-- Section 6 -->
+<section id="contact" class="contact" aria-label="Contact Us">
+  <div class="contact-inner">
+    <!-- Left: same image in a card -->
+    <figure class="contact-photo">
+      <img src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/1672830334412.png" alt="Corks and winery background">
+    </figure>
+
+    <!-- Right: form card -->
+    <div class="contact-card">
+      <h3>Contact Us</h3>
+      <p style="margin:0 0 12px;color:#4b5563;">We’ll help you plan the perfect vintage for your team or your friends &amp; family.</p>
+
+      <form id="contactForm" action="#" method="post" novalidate>
+        <div class="contact-grid">
+          <div>
+            <label class="sr-only" for="firstName">First name</label>
+            <input class="input" id="firstName" name="firstName" placeholder="First name">
+          </div>
+          <div>
+            <label class="sr-only" for="lastName">Last name</label>
+            <input class="input" id="lastName" name="lastName" placeholder="Last name">
+          </div>
+          <div class="full">
+            <label class="sr-only" for="email">Email</label>
+            <input class="input" id="email" name="email" type="email" placeholder="you@example.com">
+          </div>
+          <div class="full">
+            <label class="sr-only" for="phone">Phone</label>
+            <input class="input" id="phone" name="phone" type="tel" placeholder="(###) ###-####">
+          </div>
+          <div class="full">
+            <label class="sr-only" for="message">Message</label>
+            <textarea class="textarea" id="message" name="message" placeholder="How can we help?"></textarea>
+          </div>
+        </div>
+
+        <div style="margin-top:12px;">
+          <button class="btn primary" type="submit">Send Message</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+
+  
 <!-- Footer (full width, unchanged) -->
 <footer class="site-footer">
   <div class="container footer-grid">
@@ -1046,7 +1232,48 @@ nav{display:flex;align-items:center;justify-content:center}
   vids.forEach(v => io.observe(v));
 })();
 
+/* Section 5: smooth scroll to Contact from “Contact Us” buttons */
+(function contactScrollLinks(){
+  const links = document.querySelectorAll('.js-scroll-contact');
+  const target = document.getElementById('contact');
+  if(!links.length || !target) return;
 
+  // Slow-ish manual scroll (smoother than default)
+  function smoothTo(el, duration=900){
+    const start = window.pageYOffset;
+    const end   = el.getBoundingClientRect().top + window.pageYOffset - 12; // small offset
+    const dist  = end - start;
+    let t0=null;
+    function step(ts){
+      if(!t0) t0 = ts;
+      const p = Math.min(1, (ts - t0) / duration);
+      const ease = p<0.5 ? 2*p*p : -1+(4-2*p)*p; // easeInOutQuad
+      window.scrollTo(0, start + dist*ease);
+      if(p<1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  links.forEach(a=>{
+    a.addEventListener('click', (e)=>{
+      // let anchors still work if JS fails
+      e.preventDefault();
+      smoothTo(target, 1100);
+    });
+  });
+})();
+
+/* Section 6: optional fake submit handler (remove if you wire up a backend) */
+(function fakeContactSubmit(){
+  const form = document.getElementById('contactForm');
+  if(!form) return;
+  form.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    alert('Thanks! We’ll get back to you shortly.');
+  });
+})();
+
+  
 </script>
 </body>
 </html>
