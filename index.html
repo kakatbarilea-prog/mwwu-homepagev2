@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -7,433 +7,331 @@
 <link rel="preconnect" href="https://d34hmiuaex7c0.cloudfront.net" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-  :root{
-    --brand:#800080; --brand-2:#9a329a; --gold:#e9cf7c;
-    --ink:#0f172a; --muted:#6b7280; --line:#e9e9ee; --bg:#ffffff;
-    --radius:16px; --shadow-sm:0 8px 18px rgba(0,0,0,.06); --shadow-lg:0 24px 60px rgba(0,0,0,.12);
-    --hdr-h:64px;
-    --step-count:6;
-    --thumb-gap:8px;
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;color:var(--ink);background:var(--bg)}
-  a{color:inherit;text-decoration:none}
-  img,video{max-width:100%;height:auto;display:block}
-  .container{max-width:1200px;margin:0 auto;padding:0 16px}
-  .btn{display:inline-flex;align-items:center;justify-content:center;height:42px;padding:0 16px;border-radius:999px;border:1px solid transparent;font-weight:800;font-size:15px;cursor:pointer;transition:transform .04s ease,box-shadow .2s ease,background .2s ease,filter .2s ease;user-select:none;position:relative;overflow:hidden;white-space:nowrap}
-  .btn:active{transform:translateY(1px)}
-  .btn.primary{background:linear-gradient(180deg,var(--brand),var(--brand-2));color:#fff;box-shadow:0 12px 28px rgba(128,0,128,.35)}
-  .btn.primary:hover{transform:translateY(-1px);box-shadow:0 18px 36px rgba(128,0,128,.45);filter:brightness(1.04)}
-  .btn.ghost{background:#fff;border-color:var(--line);color:#111827}
-  .btn.ghost:hover{border-color:var(--brand);color:var(--brand)}
-  .pulse{animation:pulse 2.2s infinite}
-  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(128,0,128,.45)}70%{box-shadow:0 0 0 18px rgba(128,0,128,0)}100%{box-shadow:0 0 0 0 rgba(128,0,128,0)}}
-
-  /* One-liner announcement (NOT sticky; header is the only sticky element) */
-  .announce-global{background:var(--brand);color:#fff;font-size:14px;line-height:1.35}
-  .announce-inner{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:10px 0}
-  .announce-global a{color:#fff;text-decoration:underline}
-
-  /* Sticky header (only constant element) */
-  header{border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:100}
-  .bar{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;padding:14px 24px}
-  .brand{display:flex;align-items:center;gap:12px;min-width:0}
-  .brand img{height:56px;width:auto}
-  nav{display:flex;align-items:center;justify-content:center}
-  .nav{display:flex;list-style:none;margin:0;padding:0;font-size:16px;width:100%;justify-content:space-evenly;white-space:nowrap}
-  .nav a{color:#374151;font-weight:700}
-  .nav a:hover{color:var(--brand)}
-  .has-sub{position:relative}
-  .subnav{position:absolute;top:calc(100% + 8px);left:0;background:#fff;border-radius:12px;box-shadow:0 14px 36px rgba(0,0,0,.12);padding:8px;display:none}
-  .has-sub:hover .subnav,.has-sub:focus-within .subnav{display:block}
-  .subnav a{display:block;padding:8px 10px;border-radius:8px}
-  .subnav a:hover{background:#faf7fb;color:var(--brand)}
-  .actions{display:flex;align-items:center;gap:12px}
-  .phone{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;color:#111827}
-  .phone svg{width:16px;height:16px}
-  .social{display:flex;gap:8px}
-  .social a{width:34px;height:34px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center}
-  .social a:hover{color:var(--brand)}
-  .hamburger{display:none}
-  #nav-toggle{display:none}
-  @media (max-width:980px){
-    .bar{grid-template-columns:auto auto 1fr}
-    .brand img{height:48px}
-    .hamburger{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:10px;padding:6px 10px;background:#fff}
-    nav{justify-content:flex-end}
-    .nav{position:fixed;inset:64px 16px auto 16px;flex-direction:column;gap:10px;background:#fff;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.08);padding:14px;display:none}
-    #nav-toggle:checked ~ nav .nav{display:flex}
-    .subnav{position:static;box-shadow:none;padding:6px 0}
-  }
-
-  /* HERO theater (preview video + copy + thumbnails) */
-  #hero{position:relative;background:#000;color:#fff}
-  #steps.theater{position:relative;min-height:calc(100dvh - var(--hdr-h));background:#000;color:#fff;isolation:isolate;overflow:hidden}
-  .stage{position:relative;height:100%}
-  .stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(1.08) contrast(1.05)}
-  .stage .scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.50),rgba(0,0,0,.25) 40%,rgba(0,0,0,.72))}
-  .stage .copy{position:absolute;left:clamp(28px,6vw,72px);right:auto;top:16px;max-width:min(64ch,56vw);z-index:2;display:grid;gap:10px;text-align:left;padding-bottom:180px}
-  .stage .meta{font-weight:800;letter-spacing:.2px;opacity:.98;margin-bottom:2px}
-  .stage h2{margin:0;font-size:clamp(34px,6.6vw,68px);line-height:1.05;text-shadow:0 2px 18px rgba(0,0,0,.6)}
-  .stage p{margin:0 0 8px;font-size:clamp(15px,2.1vw,19px);opacity:.98}
-  .stage .ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
-  .stage .ctas .btn{min-width:190px}
-  @media (max-width:720px){.stage .copy{max-width:92vw}}
-
-  /* Thumbnails (always fit on one row; scale with width/zoom) */
-  .thumbs{position:absolute;left:0;right:0;bottom:12px;z-index:3;display:flex;gap:var(--thumb-gap);padding:0 16px}
-  .thumb{position:relative;flex:1 1 calc((100% - (var(--step-count) - 1)*var(--thumb-gap)) / var(--step-count));min-width:0;border-radius:12px;overflow:hidden;border:2px solid transparent;transition:border-color .2s ease,transform .2s ease;background:#111}
-  .thumb video{width:100%;aspect-ratio:16/9;object-fit:cover}
-  .thumb .label{position:absolute;left:8px;bottom:8px;background:rgba(255,255,255,.92);color:#111;padding:5px 9px;border-radius:999px;font-weight:800;display:flex;align-items:center;gap:6px;border:1px solid rgba(255,255,255,.95);font-size:clamp(10px,1.7vw,13px)}
-  .thumb[aria-current="true"]{border-color:var(--brand);transform:translateY(-2px)}
-  .thumb:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
-
-  /* Event Countdown */
-  .countdown{position:relative;background:linear-gradient(180deg,#faf7fb,#fff);padding:clamp(28px,6vw,64px) 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-  .count-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:20px;align-items:center}
-  .timer{display:flex;gap:10px;flex-wrap:wrap}
-  .tile{min-width:92px;border-radius:14px;border:1px solid var(--line);background:#fff;box-shadow:var(--shadow-sm);padding:12px;text-align:center}
-  .tile b{display:block;font-size:26px}
-  @media(max-width:900px){.count-grid{grid-template-columns:1fr}.tile{min-width:74px}}
-
-  /* Mosaic */
-  .mosaic{padding:clamp(40px,6vw,80px) 0;background:#fff}
-  .mosaic .section-title{text-align:center;font-size:clamp(24px,4.2vw,36px);margin:0 0 12px}
-  .mosaic .section-sub{text-align:center;color:var(--muted);max-width:760px;margin:0 auto 28px}
-  .grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
-  .photo-tile{position:relative;overflow:hidden;border-radius:12px}
-  .photo-tile img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.2,.6,.2,1)}
-  .photo-tile:hover img{transform:scale(1.06)}
-  @media(max-width:980px){.grid{grid-template-columns:repeat(4,1fr)}}
-  @media(max-width:640px){.grid{grid-template-columns:repeat(3,1fr)}}
-
-  /* Stories */
-  .stories{background:#fff;padding:clamp(36px,6vw,76px) 0}
-  .stories .wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-  .story{border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow-sm)}
-  .story video{width:100%;aspect-ratio:9/16;object-fit:cover}
-  .story .cap{padding:10px;font-weight:700}
-  @media(max-width:980px){.stories .wrap{grid-template-columns:1fr 1fr}}
-  @media(max-width:640px){.stories .wrap{grid-template-columns:1fr}}
-
-  /* Team */
-  .team{background:linear-gradient(180deg,#faf7fb,#fff);padding:clamp(36px,6vw,76px) 0}
-  .cards{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-  .tcard{border:1px solid var(--line);border-radius:18px;background:#fff;box-shadow:var(--shadow-lg);overflow:hidden}
-  .tcard .media{aspect-ratio:16/9;background:#000}
-  .tcard .body{padding:14px}
-  .tcard h3{margin:0 0 6px}
-  .tcard p{margin:0 0 10px;color:#4b5563}
-  @media(max-width:900px){.cards{grid-template-columns:1fr}}
-
-  /* Quiz */
-  .quiz{padding:clamp(36px,6vw,72px) 0;background:#fff;border-top:1px solid var(--line)}
-  .quiz .inner{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:center}
-  .quiz .card{border:1px solid var(--line);border-radius:16px;padding:16px;background:#fff;box-shadow:var(--shadow-sm)}
-  .quiz h3{margin:0 0 8px}
-  .quiz label{display:block;margin:8px 0}
-  .result{margin-top:10px;font-weight:800;color:#374151}
-  @media(max-width:900px){.quiz .inner{grid-template-columns:1fr}}
-
-  /* Contact */
-  .contact{position:relative;padding:clamp(48px,8vw,96px) 0;background:url("https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/1672830407529.png") center/cover no-repeat;isolation:isolate}
-  .contact::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(128,0,128,.7),rgba(154,50,154,.7));backdrop-filter:blur(2px)}
-  .contact-grid{position:relative;z-index:1;display:grid;gap:28px;grid-template-columns:1.05fr 1fr}
-  .contact .photo{border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-lg)}
-  .contact .form{background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:0 16px 40px rgba(0,0,0,.12)}
-  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
-  .field input,.field textarea{padding:10px 12px;border:1px solid var(--line);border-radius:10px;font:inherit}
-
-  /* Footer */
-  .site-footer{background:#111;color:#ddd;font-size:15px;line-height:1.6;padding-top:50px}
-  .footer-grid{display:grid;gap:40px;grid-template-columns:1.2fr 1fr 1fr}
-  @media(max-width:900px){.footer-grid{grid-template-columns:1fr 1fr}}
-  @media(max-width:640px){.footer-grid{grid-template-columns:1fr}}
-  .foot-title{color:#fff;font-weight:800;margin:0 0 12px;font-size:16px;text-transform:uppercase;position:relative}
-  .foot-title::after{content:"";display:block;width:40px;height:2px;background:var(--brand);margin-top:6px}
-  .footer-text{margin-bottom:14px;max-width:500px;color:#ccc}
-  .footer-cta{margin-top:6px;display:inline-block;font-size:14px;padding:8px 18px}
-  .footer-social{margin-top:16px;display:flex;gap:12px}
-  .footer-social a{width:34px;height:34px;border-radius:50%;background:#222;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:15px}
-  .footer-social a:hover{background:var(--brand);color:#fff}
-  .foot-links{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:8px 24px}
-  .foot-links a{color:#ddd;font-weight:500}
-  .foot-links a:hover{color:#fff}
-  .contact-list{list-style:none;padding:0;margin:0 0 14px;display:flex;flex-direction:column;gap:10px}
-  .contact-list i{margin-right:8px;color:#fff}
-  .contact-list a{color:#ddd}
-  .contact-list a:hover{color:#fff}
-  .hours-label{display:block;font-size:13px;color:#aaa;margin-bottom:2px;text-transform:uppercase}
-  .hours-value{color:#eee}
-  .footer-bottom{border-top:1px solid #222;margin-top:40px;padding:18px 0;font-size:13px;color:#999}
-  .footer-bottom-inner{display:flex;align-items:center;justify-content:space-between;gap:20px}
-  .footer-bottom a{color:#999;margin-left:14px}
-  .footer-bottom a:hover{color:#fff}
-
-  .section-title{font-weight:900}
-  .section-sub{font-size:16px}
-
-  @media (prefers-reduced-motion:reduce){.pulse{animation:none}.stage video{display:none}}
+:root{--brand:#800080;--brand-2:#9a329a;--gold:#e9cf7c;--ink:#0f172a;--muted:#6b7280;--line:#e9e9ee;--bg:#ffffff;--radius:16px;--shadow-sm:0 8px 18px rgba(0,0,0,.06);--shadow-lg:0 24px 60px rgba(0,0,0,.12);--hdr-h:64px;--step-count:6;--thumb-gap:8px}
+*{box-sizing:border-box}
+html,body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+a{color:inherit;text-decoration:none}
+img,video{max-width:100%;height:auto;display:block}
+.container{max-width:1200px;margin:0 auto;padding:0 16px}
+.btn{display:inline-flex;align-items:center;justify-content:center;height:42px;padding:0 16px;border-radius:999px;border:1px solid transparent;font-weight:800;font-size:15px;cursor:pointer;transition:transform .04s ease,box-shadow .2s ease,background .2s ease,filter .2s ease;user-select:none;position:relative;overflow:hidden;white-space:nowrap}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:linear-gradient(180deg,var(--brand),var(--brand-2));color:#fff;box-shadow:0 12px 28px rgba(128,0,128,.35)}
+.btn.primary:hover{transform:translateY(-1px);box-shadow:0 18px 36px rgba(128,0,128,.45);filter:brightness(1.04)}
+.btn.ghost{background:#fff;border-color:var(--line);color:#111827}
+.btn.ghost:hover{border-color:var(--brand);color:var(--brand)}
+.pulse{animation:pulse 2.2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(128,0,128,.45)}70%{box-shadow:0 0 0 18px rgba(128,0,128,0)}100%{box-shadow:0 0 0 0 rgba(128,0,128,0)}}
+.announce-global{background:var(--brand);color:#fff;font-size:14px;line-height:1.35}
+.announce-inner{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:10px 0}
+.announce-global a{color:#fff;text-decoration:underline}
+header{border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:100}
+.bar{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;padding:14px 24px}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.brand img{height:56px;width:auto}
+nav{display:flex;align-items:center;justify-content:center}
+.nav{display:flex;list-style:none;margin:0;padding:0;font-size:16px;width:100%;justify-content:space-evenly;white-space:nowrap}
+.nav a{color:#374151;font-weight:700}
+.nav a:hover{color:var(--brand)}
+.has-sub{position:relative}
+.subnav{position:absolute;top:calc(100% + 8px);left:0;background:#fff;border-radius:12px;box-shadow:0 14px 36px rgba(0,0,0,.12);padding:8px;display:none}
+.has-sub:hover .subnav,.has-sub:focus-within .subnav{display:block}
+.subnav a{display:block;padding:8px 10px;border-radius:8px}
+.subnav a:hover{background:#faf7fb;color:var(--brand)}
+.actions{display:flex;align-items:center;gap:12px}
+.phone{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;color:#111827}
+.phone svg{width:16px;height:16px}
+.social{display:flex;gap:8px}
+.social a{width:34px;height:34px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center}
+.social a:hover{color:var(--brand)}
+.hamburger{display:none}
+#nav-toggle{display:none}
+@media (max-width:980px){
+  .bar{grid-template-columns:auto auto 1fr}
+  .brand img{height:48px}
+  .hamburger{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:10px;padding:6px 10px;background:#fff}
+  nav{justify-content:flex-end}
+  .nav{position:fixed;inset:64px 16px auto 16px;flex-direction:column;gap:10px;background:#fff;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.08);padding:14px;display:none}
+  #nav-toggle:checked ~ nav .nav{display:flex}
+  .subnav{position:static;box-shadow:none;padding:6px 0}
+}
+#hero{position:relative;background:#000;color:#fff}
+#steps.theater{position:relative;min-height:calc(100dvh - var(--hdr-h));background:#000;color:#fff;isolation:isolate;overflow:hidden}
+.stage{position:relative;height:100%}
+.stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(1.08) contrast(1.05)}
+.stage .scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.50),rgba(0,0,0,.25) 40%,rgba(0,0,0,.72))}
+.stage .copy{position:absolute;left:clamp(28px,6vw,72px);right:auto;top:16px;max-width:min(64ch,56vw);z-index:2;display:grid;gap:10px;text-align:left;padding-bottom:180px}
+.stage .meta{font-weight:800;letter-spacing:.2px;opacity:.98;margin-bottom:2px}
+.stage h2{margin:0;font-size:clamp(34px,6.6vw,68px);line-height:1.05;text-shadow:0 2px 18px rgba(0,0,0,.6)}
+.stage p{margin:0 0 8px;font-size:clamp(15px,2.1vw,19px);opacity:.98}
+.stage .ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+.stage .ctas .btn{min-width:190px}
+@media (max-width:720px){.stage .copy{max-width:92vw}}
+.thumbs{position:absolute;left:0;right:0;bottom:12px;z-index:3;display:flex;gap:var(--thumb-gap);padding:0 16px}
+.thumb{position:relative;flex:1 1 calc((100% - (var(--step-count) - 1)*var(--thumb-gap)) / var(--step-count));min-width:0;border-radius:12px;overflow:hidden;border:2px solid transparent;transition:border-color .2s ease,transform .2s ease;background:#111}
+.thumb video{width:100%;aspect-ratio:16/9;object-fit:cover}
+.thumb .label{position:absolute;left:8px;bottom:8px;background:rgba(255,255,255,.92);color:#111;padding:5px 9px;border-radius:999px;font-weight:800;display:flex;align-items:center;gap:6px;border:1px solid rgba(255,255,255,.95);font-size:clamp(10px,1.7vw,13px)}
+.thumb[aria-current="true"]{border-color:var(--brand);transform:translateY(-2px)}
+.thumb:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.countdown{position:relative;background:linear-gradient(180deg,#faf7fb,#fff);padding:clamp(28px,6vw,64px) 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.count-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:20px;align-items:center}
+.timer{display:flex;gap:10px;flex-wrap:wrap}
+.tile{min-width:92px;border-radius:14px;border:1px solid var(--line);background:#fff;box-shadow:var(--shadow-sm);padding:12px;text-align:center}
+.tile b{display:block;font-size:26px}
+@media(max-width:900px){.count-grid{grid-template-columns:1fr}.tile{min-width:74px}}
+.mosaic{padding:clamp(40px,6vw,80px) 0;background:#fff}
+.mosaic .section-title{text-align:center;font-size:clamp(24px,4.2vw,36px);margin:0 0 12px}
+.mosaic .section-sub{text-align:center;color:var(--muted);max-width:760px;margin:0 auto 28px}
+.grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.photo-tile{position:relative;overflow:hidden;border-radius:12px}
+.photo-tile img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.2,.6,.2,1)}
+.photo-tile:hover img{transform:scale(1.06)}
+@media(max-width:980px){.grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:640px){.grid{grid-template-columns:repeat(3,1fr)}}
+.stories{background:#fff;padding:clamp(36px,6vw,76px) 0}
+.stories .wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.story{border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow-sm)}
+.story video{width:100%;aspect-ratio:9/16;object-fit:cover}
+.story .cap{padding:10px;font-weight:700}
+@media(max-width:980px){.stories .wrap{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.stories .wrap{grid-template-columns:1fr}}
+.team{background:linear-gradient(180deg,#faf7fb,#fff);padding:clamp(36px,6vw,76px) 0}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.tcard{border:1px solid var(--line);border-radius:18px;background:#fff;box-shadow:var(--shadow-lg);overflow:hidden}
+.tcard .media{aspect-ratio:16/9;background:#000}
+.tcard .body{padding:14px}
+.tcard h3{margin:0 0 6px}
+.tcard p{margin:0 0 10px;color:#4b5563}
+@media(max-width:900px){.cards{grid-template-columns:1fr}}
+.quiz{padding:clamp(36px,6vw,72px) 0;background:#fff;border-top:1px solid var(--line)}
+.quiz .inner{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:center}
+.quiz .card{border:1px solid var(--line);border-radius:16px;padding:16px;background:#fff;box-shadow:var(--shadow-sm)}
+.quiz h3{margin:0 0 8px}
+.quiz label{display:block;margin:8px 0}
+.result{margin-top:10px;font-weight:800;color:#374151}
+@media(max-width:900px){.quiz .inner{grid-template-columns:1fr}}
+.contact{position:relative;padding:clamp(48px,8vw,96px) 0;background:url("https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/1672830407529.png") center/cover no-repeat;isolation:isolate}
+.contact::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(128,0,128,.7),rgba(154,50,154,.7));backdrop-filter:blur(2px)}
+.contact-grid{position:relative;z-index:1;display:grid;gap:28px;grid-template-columns:1.05fr 1fr}
+.contact .photo{border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-lg)}
+.contact .form{background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:0 16px 40px rgba(0,0,0,.12)}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.field input,.field textarea{padding:10px 12px;border:1px solid var(--line);border-radius:10px;font:inherit}
+.site-footer{background:#111;color:#ddd;font-size:15px;line-height:1.6;padding-top:50px}
+.footer-grid{display:grid;gap:40px;grid-template-columns:1.2fr 1fr 1fr}
+@media(max-width:900px){.footer-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.footer-grid{grid-template-columns:1fr}}
+.foot-title{color:#fff;font-weight:800;margin:0 0 12px;font-size:16px;text-transform:uppercase;position:relative}
+.foot-title::after{content:"";display:block;width:40px;height:2px;background:var(--brand);margin-top:6px}
+.footer-text{margin-bottom:14px;max-width:500px;color:#ccc}
+.footer-cta{margin-top:6px;display:inline-block;font-size:14px;padding:8px 18px}
+.footer-social{margin-top:16px;display:flex;gap:12px}
+.footer-social a{width:34px;height:34px;border-radius:50%;background:#222;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:15px}
+.footer-social a:hover{background:var(--brand);color:#fff}
+.foot-links{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:8px 24px}
+.foot-links a{color:#ddd;font-weight:500}
+.foot-links a:hover{color:#fff}
+.contact-list{list-style:none;padding:0;margin:0 0 14px;display:flex;flex-direction:column;gap:10px}
+.contact-list i{margin-right:8px;color:#fff}
+.contact-list a{color:#ddd}
+.contact-list a:hover{color:#fff}
+.hours-label{display:block;font-size:13px;color:#aaa;margin-bottom:2px;text-transform:uppercase}
+.hours-value{color:#eee}
+.footer-bottom{border-top:1px solid #222;margin-top:40px;padding:18px 0;font-size:13px;color:#999}
+.footer-bottom-inner{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.footer-bottom a{color:#999;margin-left:14px}
+.footer-bottom a:hover{color:#fff}
+.section-title{font-weight:900}
+.section-sub{font-size:16px}
+@media (prefers-reduced-motion:reduce){.pulse{animation:none}.stage video{display:none}}
 </style>
 </head>
 <body>
+<div class="announce-global" id="announce"><div class="container announce-inner"><div>🏅 Our winemakers clinched <strong>Best Red</strong> at the 2025 Garden State Amateur Wine Challenge — congratulations!</div><div><a href="https://makewinewithus.com/login">Already have an account? Log in</a></div></div></div>
+<header id="siteHeader"><div class="container bar"><a class="brand" href="#" aria-label="Make Wine With Us — Home"><img src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/1672135833219.png" alt="Make Wine With Us logo"/></a><label class="hamburger" for="nav-toggle">☰ Menu</label><input id="nav-toggle" type="checkbox"/><nav aria-label="Primary"><ul class="nav"><li class="has-sub"><a href="https://makewinewithus.com/winemaking-process">Winemaking Process</a><div class="subnav" role="menu"><a href="https://makewinewithus.com/new-product-list" role="menuitem">Wines You Can Make</a><a href="https://makewinewithus.com/design-your-custom-bottle" role="menuitem">Label Making</a></div></li><li><a href="https://makewinewithus.com/region">Regions</a></li><li><a href="https://makewinewithus.com/about">About</a></li><li><a href="https://makewinewithus.com/faq-s">FAQs</a></li><li class="has-sub"><a href="https://makewinewithus.com/upcoming-events">Events</a><div class="subnav" role="menu"><a href="https://makewinewithus.com/private-events" role="menuitem">Private Events</a><a href="https://makewinewithus.com/upcoming-events" role="menuitem">Upcoming Events</a></div></li><li><a href="#contact">Contact</a></li></ul></nav><div class="actions"><a class="phone" href="tel:+12018769463" aria-label="Call Make Wine With Us"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 3.09 5.18 2 2 0 0 1 5 3h3a2 2 0 0 1 2 1.72c.12.9.31 1.77.57 2.6a2 2 0 0 1-.45 2.11L9 10a16 16 0 0 0 5 5l.57-.57a2 2 0 0 1 2.11-.45c.83.26 1.7.45 2.6.57A2 2 0 0 1 22 16.92z"/></svg>(201) 876-9463</a><div class="social"><a href="https://www.facebook.com/MakeWineWithUs" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a><a href="https://www.instagram.com/makewinewithus/" aria-label="Instagram"><i class="fab fa-instagram"></i></a></div><a class="btn primary pulse" href="https://makewinewithus.com/create-account">Make Wine Now</a></div></div></header>
 
-  <!-- One-liner FIRST -->
-  <div class="announce-global" id="announce">
-    <div class="container announce-inner">
-      <div>🏅 Our winemakers clinched <strong>Best Red</strong> at the 2025 Garden State Amateur Wine Challenge — congratulations!</div>
-      <div><a href="https://makewinewithus.com/login">Already have an account? Log in</a></div>
+<section id="hero" aria-label="Hero">
+  <section id="steps" class="theater" aria-label="Winemaking process">
+    <div class="stage" aria-live="polite">
+      <!-- keep video visible even when Reduce Motion is on -->
+      <video id="stageVideo" playsinline muted autoplay loop style="display:block"></video>
+      <div class="scrim" aria-hidden="true"></div>
+      <div class="copy">
+        <div class="meta" id="metaLine">Step 1 of 6: Choose your varietal</div>
+        <h2 id="stepTitle">Selecting Your Grapes</h2>
+        <p id="stepDesc">Sample your favorite reds and whites — or discover new blends. Our instructors guide you through selecting grapes from regions like California, Italy, or Chile. Whether you’re after a classic or a once-in-a-lifetime wine, this is where your journey begins.</p>
+        <div class="ctas">
+          <button id="playBtn" class="btn primary" type="button" aria-label="Play video with sound">Play Video</button>
+          <button id="nextBtn" class="btn ghost" type="button" aria-label="Go to next step">Next Step</button>
+        </div>
+      </div>
+    </div>
+    <div class="thumbs" id="thumbs" role="tablist" aria-label="Winemaking steps"></div>
+  </section>
+</section>
+
+<section class="countdown" aria-label="Upcoming tasting">
+  <div class="container count-grid">
+    <div>
+      <h2 class="section-title" style="margin:0 0 6px">Wine Tasting Event</h2>
+      <p class="section-sub" style="margin:0 0 10px">Sip, swirl, and savor — reserve your spot today!</p>
+      <div class="timer" id="timer"><div class="tile"><span>Days</span><b id="d">00</b></div><div class="tile"><span>Hours</span><b id="h">00</b></div><div class="tile"><span>Minutes</span><b id="m">00</b></div><div class="tile"><span>Seconds</span><b id="s">00</b></div></div>
+      <div style="margin-top:12px"><a class="btn primary" href="https://makewinewithus.com/upcoming-events">See dates</a></div>
+    </div>
+    <div class="card" style="border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-sm);overflow:hidden"><video playsinline muted loop poster="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860172646.png" src="https://cdn.coverr.co/videos/coverr-wine-pouring-7485/1080p.mp4"></video></div>
+  </div>
+</section>
+
+<section class="mosaic" aria-label="Community moments">
+  <div class="container">
+    <h2 class="section-title">What it feels like</h2>
+    <p class="section-sub">A living wall from crush nights, racking weekends, and bottling day.</p>
+    <div class="grid" id="mosaicGrid" aria-live="polite">
+      <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860172646.png" alt="Crush in action"></div>
+      <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860246123.png" alt="Wine glasses"></div>
+      <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/page_featured_img_1695837847388.jpg" alt="Clusters of grapes"></div>
+      <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860262126.png" alt="Press operation"></div>
+      <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/page_featured_img_1755630038560.jpg" alt="Bottling line"></div>
+      <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860315613.png" alt="Vineyard"></div>
+      <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860216146.png" alt="Measuring Brix"></div>
+      <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/1672830334412.png" alt="Corks"></div>
+      <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860200388.png" alt="Grape selection"></div>
+      <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860233023.png" alt="Skins and seeds"></div>
+      <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/1672146705739.png" alt="Hero frame"></div>
     </div>
   </div>
+</section>
 
-  <!-- Sticky header SECOND (only constant element) -->
-  <header id="siteHeader">
-    <div class="container bar">
-      <a class="brand" href="#" aria-label="Make Wine With Us — Home">
-        <img src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/1672135833219.png" alt="Make Wine With Us logo"/>
-      </a>
-      <label class="hamburger" for="nav-toggle">☰ Menu</label>
-      <input id="nav-toggle" type="checkbox"/>
-      <nav aria-label="Primary">
-        <ul class="nav">
-          <li class="has-sub"><a href="https://makewinewithus.com/winemaking-process">Winemaking Process</a>
-            <div class="subnav" role="menu">
-              <a href="https://makewinewithus.com/new-product-list" role="menuitem">Wines You Can Make</a>
-              <a href="https://makewinewithus.com/design-your-custom-bottle" role="menuitem">Label Making</a>
-            </div>
-          </li>
-          <li><a href="https://makewinewithus.com/region">Regions</a></li>
-          <li><a href="https://makewinewithus.com/about">About</a></li>
-          <li><a href="https://makewinewithus.com/faq-s">FAQs</a></li>
-          <li class="has-sub"><a href="https://makewinewithus.com/upcoming-events">Events</a>
-            <div class="subnav" role="menu">
-              <a href="https://makewinewithus.com/private-events" role="menuitem">Private Events</a>
-              <a href="https://makewinewithus.com/upcoming-events" role="menuitem">Upcoming Events</a>
-            </div>
-          </li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
-      </nav>
-      <div class="actions">
-        <a class="phone" href="tel:+12018769463" aria-label="Call Make Wine With Us">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 3.09 5.18 2 2 0 0 1 5 3h3a2 2 0 0 1 2 1.72c.12.9.31 1.77.57 2.6a2 2 0 0 1-.45 2.11L9 10a16 16 0 0 0 5 5l.57-.57a2 2 0 0 1 2.11-.45c.83.26 1.7.45 2.6.57A2 2 0 0 1 22 16.92z"/></svg>
-          (201) 876-9463
-        </a>
-        <div class="social">
-          <a href="https://www.facebook.com/MakeWineWithUs" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-          <a href="https://www.instagram.com/makewinewithus/" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+<section class="stories" aria-label="How it impacted them">
+  <div class="container">
+    <h2 class="section-title" style="text-align:center;margin:0 0 10px">Stories from the cellar</h2>
+    <p class="section-sub" style="text-align:center;margin:0 0 16px">Short clips from people who made their own vintage.</p>
+    <div class="wrap">
+      <article class="story"><video playsinline controls src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1756755199668.mp4"></video><div class="cap">“Experience the excitement of crushing fresh grapes — the very first step of winemaking.”</div></article>
+      <article class="story"><video playsinline controls src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1756755209820.mp4"></video><div class="cap">“Watch the grapes transform as fresh juice flows out, starting its journey to becoming wine.”</div></article>
+      <article class="story"><video playsinline controls src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1756755761301.mp4"></video><div class="cap">“Straight from the barrel — tasting wine in its purest form during the aging process.”</div></article>
+    </div>
+  </div>
+</section>
+
+<section class="team" aria-label="Teams and friends">
+  <div class="container">
+    <h2 class="section-title" style="text-align:center;margin:0 0 6px">Come together — over nine months</h2>
+    <p class="section-sub" style="text-align:center;margin:0 0 18px">Return for crushing, pressing, racking, and bottling. Teams bond. Friends become family. A culture of winemaking continues.</p>
+    <div class="cards">
+      <article class="tcard"><div class="media"><video playsinline muted loop src="https://cdn.coverr.co/videos/coverr-people-raising-wine-glasses-5162/1080p.mp4"></video></div><div class="body"><h3>For Teams & Clients</h3><p>Make a company vintage for gifting and events. The process becomes a shared story your clients remember.</p><a class="btn ghost" href="https://makewinewithus.com/private-events">Corporate experiences</a></div></article>
+      <article class="tcard"><div class="media"><video playsinline muted loop src="https://cdn.coverr.co/videos/coverr-friends-toast-4742/1080p.mp4"></video></div><div class="body"><h3>For Friends & Family</h3><p>Birthdays, engagements, weddings — craft a label you’ll bring out for years and say “we made this.”</p><a class="btn ghost" href="https://makewinewithus.com/upcoming-events">Plan your season</a></div></article>
+    </div>
+  </div>
+</section>
+
+<section class="quiz" aria-label="Wine personality quiz">
+  <div class="container inner">
+    <div>
+      <h2 class="section-title" style="margin:0 0 8px">What’s your wine personality?</h2>
+      <p class="section-sub">Answer three quick questions and we’ll suggest grapes you’ll love — then book your first session.</p>
+    </div>
+    <div class="card">
+      <h3>Tell us your vibe</h3>
+      <label><input type="radio" name="vibe" value="bold"> Bold & structured</label>
+      <label><input type="radio" name="vibe" value="fruit"> Juicy & fruit-forward</label>
+      <label><input type="radio" name="vibe" value="crisp"> Crisp & zesty</label>
+      <label><input type="radio" name="vibe" value="silky"> Silky & elegant</label>
+      <div class="result" id="qResult">—</div>
+      <div style="margin-top:10px"><a class="btn primary" href="https://makewinewithus.com/new-product-list">See suggested grapes</a></div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="contact">
+  <div class="container contact-grid">
+    <figure class="photo"><img src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/1672830334412.png" alt="Custom MWwU corks"></figure>
+    <div class="form">
+      <h2 class="section-title" style="margin:0 0 8px">Contact Us</h2>
+      <p class="section-sub" style="margin:0 0 14px">We’ll help you plan the perfect vintage for your team or your friends & family.</p>
+      <form novalidate>
+        <div style="display:grid;gap:12px;grid-template-columns:1fr 1fr">
+          <div class="field"><label>First name</label><input required autocomplete="given-name"></div>
+          <div class="field"><label>Last name</label><input required autocomplete="family-name"></div>
         </div>
-        <a class="btn primary pulse" href="https://makewinewithus.com/create-account">Make Wine Now</a>
-      </div>
+        <div class="field"><label>Email</label><input type="email" required autocomplete="email" placeholder="you@example.com"></div>
+        <div class="field"><label>Phone</label><input type="tel" required autocomplete="tel"></div>
+        <div class="field"><label>Message</label><textarea rows="4" required></textarea></div>
+        <button class="btn primary" type="submit">Send Message</button>
+      </form>
     </div>
-  </header>
+  </div>
+</section>
 
-  <!-- Preview video + thumbnails THIRD -->
-  <section id="hero" aria-label="Hero">
-    <section id="steps" class="theater" aria-label="Winemaking process">
-      <div class="stage" aria-live="polite">
-        <video id="stageVideo" playsinline muted autoplay loop></video>
-        <div class="scrim" aria-hidden="true"></div>
-        <div class="copy">
-          <div class="meta" id="metaLine">Step 1 of 6: Sourcing your fruit</div>
-          <h2 id="stepTitle">Select your grapes</h2>
-          <p id="stepDesc">With our instructors, pick the varietal and region that match your taste and your occasion — a corporate blend, a friends’ favorite, or your signature vintage.</p>
-          <div class="ctas">
-            <button id="playBtn" class="btn primary" type="button" aria-label="Play video with sound">Play Video</button>
-            <button id="nextBtn" class="btn ghost" type="button" aria-label="Go to next step">Next Step</button>
-          </div>
-        </div>
-      </div>
-      <div class="thumbs" id="thumbs" role="tablist" aria-label="Winemaking steps"></div>
-      <div class="modal" id="modal" style="position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:120;visibility:hidden;opacity:0;transition:opacity .25s ease,visibility .25s ease">
-        <button class="close" id="closeModal" aria-label="Close video" style="position:absolute;top:12px;right:12px;width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:20px;cursor:pointer"><i class="fa fa-xmark"></i></button>
-        <video id="modalVideo" controls style="width:100%;height:100%;object-fit:contain;background:#000"></video>
-      </div>
-    </section>
-  </section>
-
-  <!-- Rest of sections -->
-  <section class="countdown" aria-label="Upcoming tasting">
-    <div class="container count-grid">
-      <div>
-        <h2 class="section-title" style="margin:0 0 6px">Wine Tasting Event</h2>
-        <p class="section-sub" style="margin:0 0 10px">Sip, swirl, and savor — reserve your spot today!</p>
-        <div class="timer" id="timer">
-          <div class="tile"><span>Days</span><b id="d">00</b></div>
-          <div class="tile"><span>Hours</span><b id="h">00</b></div>
-          <div class="tile"><span>Minutes</span><b id="m">00</b></div>
-          <div class="tile"><span>Seconds</span><b id="s">00</b></div>
-        </div>
-        <div style="margin-top:12px"><a class="btn primary" href="https://makewinewithus.com/upcoming-events">See dates</a></div>
-      </div>
-      <div class="card" style="border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-sm);overflow:hidden">
-        <video playsinline muted loop poster="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860172646.png" src="https://cdn.coverr.co/videos/coverr-wine-pouring-7485/1080p.mp4"></video>
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-col">
+      <h3 class="foot-title">About Make Wine With Us</h3>
+      <p class="footer-text">Enjoy a unique winmaking experience - craft your own wine from premium grapes with guidance from our expert staff. Aged to perfection over a 9-month period, your wine is then bottled by you and taken home to savor and share.</p>
+      <a href="https://makewinewithus.com/create-account" class="btn primary footer-cta">Become a Winemaker</a>
+      <div class="footer-social">
+        <a href="https://www.instagram.com/makewinewithus/" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.facebook.com/MakeWineWithUs" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
       </div>
     </div>
-  </section>
-
-  <section class="mosaic" aria-label="Community moments">
-    <div class="container">
-      <h2 class="section-title">What it feels like</h2>
-      <p class="section-sub">A living wall from crush nights, racking weekends, and bottling day.</p>
-      <div class="grid" id="mosaicGrid" aria-live="polite">
-        <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860172646.png" alt="Crush in action"></div>
-        <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860246123.png" alt="Wine glasses"></div>
-        <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/page_featured_img_1695837847388.jpg" alt="Clusters of grapes"></div>
-        <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860262126.png" alt="Press operation"></div>
-        <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/page_featured_img_1755630038560.jpg" alt="Bottling line"></div>
-        <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860315613.png" alt="Vineyard"></div>
-        <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860216146.png" alt="Measuring Brix"></div>
-        <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/1672830334412.png" alt="Corks"></div>
-        <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860200388.png" alt="Grape selection"></div>
-        <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1752860233023.png" alt="Skins and seeds"></div>
-        <div class="photo-tile"><img loading="lazy" src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/1672146705739.png" alt="Hero frame"></div>
-      </div>
+    <div class="footer-col">
+      <h3 class="foot-title">Explore</h3>
+      <ul class="foot-links">
+        <li><a href="https://makewinewithus.com/about">About</a></li><li><a href="https://makewinewithus.com/winemaking-process">Winemaking Process</a></li>
+        <li><a href="https://makewinewithus.com/new-product-list">Wines You Can Make</a></li><li><a href="https://makewinewithus.com/region">Regions</a></li>
+        <li><a href="https://makewinewithus.com/blog">Blog</a></li><li><a href="https://makewinewithus.com/faq-s">FAQs</a></li>
+        <li><a href="https://makewinewithus.com/upcoming-events">Events</a></li><li><a href="https://makewinewithus.com/private-events">Private Events</a></li>
+        <li><a href="https://makewinewithus.com/contact">Contact</a></li>
+      </ul>
     </div>
-  </section>
-
-  <section class="stories" aria-label="How it impacted them">
-    <div class="container">
-      <h2 class="section-title" style="text-align:center;margin:0 0 10px">Stories from the cellar</h2>
-      <p class="section-sub" style="text-align:center;margin:0 0 16px">Short clips from people who made their own vintage.</p>
-      <div class="wrap">
-        <article class="story"><video playsinline controls src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1756755199668.mp4"></video><div class="cap">“Experience the excitement of crushing fresh grapes — the very first step of winemaking.”</div></article>
-        <article class="story"><video playsinline controls src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1756755209820.mp4"></video><div class="cap">“Watch the grapes transform as fresh juice flows out, starting its journey to becoming wine.”</div></article>
-        <article class="story"><video playsinline controls src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1756755761301.mp4"></video><div class="cap">“Straight from the barrel — tasting wine in its purest form during the aging process.”</div></article>
-      </div>
+    <div class="footer-col">
+      <h3 class="foot-title">Have a Question?</h3>
+      <ul class="contact-list">
+        <li><i class="fas fa-map-marker-alt"></i>21 Curie Avenue, Wallington, NJ 07057</li>
+        <li><i class="fas fa-phone-alt"></i><a href="tel:+12018769463">(201) 876-9463</a></li>
+        <li><i class="fas fa-envelope"></i><a href="mailto:info@makewinewithus.com">info@makewinewithus.com</a></li>
+      </ul>
+      <div class="hours"><span class="hours-label">Hours</span><span class="hours-value">Closed today</span></div>
     </div>
-  </section>
-
-  <section class="team" aria-label="Teams and friends">
-    <div class="container">
-      <h2 class="section-title" style="text-align:center;margin:0 0 6px">Come together — over nine months</h2>
-      <p class="section-sub" style="text-align:center;margin:0 0 18px">Return for crushing, pressing, racking, and bottling. Teams bond. Friends become family. A culture of winemaking continues.</p>
-      <div class="cards">
-        <article class="tcard">
-          <div class="media"><video playsinline muted loop src="https://cdn.coverr.co/videos/coverr-people-raising-wine-glasses-5162/1080p.mp4"></video></div>
-          <div class="body"><h3>For Teams & Clients</h3><p>Make a company vintage for gifting and events. The process becomes a shared story your clients remember.</p><a class="btn ghost" href="https://makewinewithus.com/private-events">Corporate experiences</a></div>
-        </article>
-        <article class="tcard">
-          <div class="media"><video playsinline muted loop src="https://cdn.coverr.co/videos/coverr-friends-toast-4742/1080p.mp4"></video></div>
-          <div class="body"><h3>For Friends & Family</h3><p>Birthdays, engagements, weddings — craft a label you’ll bring out for years and say “we made this.”</p><a class="btn ghost" href="https://makewinewithus.com/upcoming-events">Plan your season</a></div>
-        </article>
-      </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container footer-bottom-inner">
+      <p>© 2025 Make Wine With Us. All rights reserved.</p>
+      <div class="foot-legal"><a href="https://makewinewithus.com/privacy-policy">Privacy</a><a href="https://makewinewithus.com/terms-of-service">Terms</a></div>
     </div>
-  </section>
-
-  <section class="quiz" aria-label="Wine personality quiz">
-    <div class="container inner">
-      <div>
-        <h2 class="section-title" style="margin:0 0 8px">What’s your wine personality?</h2>
-        <p class="section-sub">Answer three quick questions and we’ll suggest grapes you’ll love — then book your first session.</p>
-      </div>
-      <div class="card">
-        <h3>Tell us your vibe</h3>
-        <label><input type="radio" name="vibe" value="bold"> Bold & structured</label>
-        <label><input type="radio" name="vibe" value="fruit"> Juicy & fruit-forward</label>
-        <label><input type="radio" name="vibe" value="crisp"> Crisp & zesty</label>
-        <label><input type="radio" name="vibe" value="silky"> Silky & elegant</label>
-        <div class="result" id="qResult">—</div>
-        <div style="margin-top:10px"><a class="btn primary" href="https://makewinewithus.com/new-product-list">See suggested grapes</a></div>
-      </div>
-    </div>
-  </section>
-
-  <section id="contact" class="contact">
-    <div class="container contact-grid">
-      <figure class="photo"><img src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/1672830334412.png" alt="Custom MWwU corks"></figure>
-      <div class="form">
-        <h2 class="section-title" style="margin:0 0 8px">Contact Us</h2>
-        <p class="section-sub" style="margin:0 0 14px">We’ll help you plan the perfect vintage for your team or your friends & family.</p>
-        <form novalidate>
-          <div style="display:grid;gap:12px;grid-template-columns:1fr 1fr">
-            <div class="field"><label>First name</label><input required autocomplete="given-name"></div>
-            <div class="field"><label>Last name</label><input required autocomplete="family-name"></div>
-          </div>
-          <div class="field"><label>Email</label><input type="email" required autocomplete="email" placeholder="you@example.com"></div>
-          <div class="field"><label>Phone</label><input type="tel" required autocomplete="tel"></div>
-          <div class="field"><label>Message</label><textarea rows="4" required></textarea></div>
-          <button class="btn primary" type="submit">Send Message</button>
-        </form>
-      </div>
-    </div>
-  </section>
-
-  <footer class="site-footer">
-    <div class="container footer-grid">
-      <div class="footer-col">
-        <h3 class="foot-title">About Make Wine With Us</h3>
-        <p class="footer-text">Enjoy a unique winmaking experience - craft your own wine from premium grapes with guidance from our expert staff. Aged to perfection over a 9-month period, your wine is then bottled by you and taken home to savor and share.</p>
-        <a href="https://makewinewithus.com/create-account" class="btn primary footer-cta">Become a Winemaker</a>
-        <div class="footer-social">
-          <a href="https://www.instagram.com/makewinewithus/" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-          <a href="https://www.facebook.com/MakeWineWithUs" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-        </div>
-      </div>
-      <div class="footer-col">
-        <h3 class="foot-title">Explore</h3>
-        <ul class="foot-links">
-          <li><a href="https://makewinewithus.com/about">About</a></li><li><a href="https://makewinewithus.com/winemaking-process">Winemaking Process</a></li>
-          <li><a href="https://makewinewithus.com/new-product-list">Wines You Can Make</a></li><li><a href="https://makewinewithus.com/region">Regions</a></li>
-          <li><a href="https://makewinewithus.com/blog">Blog</a></li><li><a href="https://makewinewithus.com/faq-s">FAQs</a></li>
-          <li><a href="https://makewinewithus.com/upcoming-events">Events</a></li><li><a href="https://makewinewithus.com/private-events">Private Events</a></li>
-          <li><a href="https://makewinewithus.com/contact">Contact</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h3 class="foot-title">Have a Question?</h3>
-        <ul class="contact-list">
-          <li><i class="fas fa-map-marker-alt"></i>21 Curie Avenue, Wallington, NJ 07057</li>
-          <li><i class="fas fa-phone-alt"></i><a href="tel:+12018769463">(201) 876-9463</a></li>
-          <li><i class="fas fa-envelope"></i><a href="mailto:info@makewinewithus.com">info@makewinewithus.com</a></li>
-        </ul>
-        <div class="hours"><span class="hours-label">Hours</span><span class="hours-value">Closed today</span></div>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <div class="container footer-bottom-inner">
-        <p>© 2025 Make Wine With Us. All rights reserved.</p>
-        <div class="foot-legal"><a href="https://makewinewithus.com/privacy-policy">Privacy</a><a href="https://makewinewithus.com/terms-of-service">Terms</a></div>
-      </div>
-    </div>
-  </footer>
+  </div>
+</footer>
 
 <script>
 (function(){
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const prefersReduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function setHeights(){const hdr=document.getElementById('siteHeader');const hdrH=hdr?hdr.offsetHeight:0;document.documentElement.style.setProperty('--hdr-h',hdrH+'px')}
+  window.addEventListener('load',setHeights,{once:true});window.addEventListener('resize',setHeights);
 
-  function setHeights(){
-    const hdr = document.getElementById('siteHeader');
-    const hdrH = hdr ? hdr.offsetHeight : 0;
-    document.documentElement.style.setProperty('--hdr-h', hdrH + 'px');
-  }
-  window.addEventListener('load', setHeights, {once:true});
-  window.addEventListener('resize', setHeights);
-
-  document.addEventListener('click', e=>{
-    const t=e.target.closest('.btn'); if(!t) return;
-    const r=document.createElement('span'),rect=t.getBoundingClientRect();
-    Object.assign(r.style,{position:'absolute',left:(e.clientX-rect.left)+'px',top:(e.clientY-rect.top)+'px',width:'6px',height:'6px',borderRadius:'50%',background:'rgba(255,255,255,.5)',transform:'translate(-50%,-50%) scale(0)',pointerEvents:'none',transition:'transform .6s ease, opacity .8s ease'});
-    t.appendChild(r); requestAnimationFrame(()=>{r.style.transform='translate(-50%,-50%) scale(18)'; r.style.opacity='0';}); setTimeout(()=>r.remove(),800);
-  });
+  document.addEventListener('click',e=>{const t=e.target.closest('.btn');if(!t)return;const r=document.createElement('span'),rect=t.getBoundingClientRect();Object.assign(r.style,{position:'absolute',left:(e.clientX-rect.left)+'px',top:(e.clientY-rect.top)+'px',width:'6px',height:'6px',borderRadius:'50%',background:'rgba(255,255,255,.5)',transform:'translate(-50%,-50%) scale(0)',pointerEvents:'none',transition:'transform .6s ease, opacity .8s ease'});t.appendChild(r);requestAnimationFrame(()=>{r.style.transform='translate(-50%,-50%) scale(18)';r.style.opacity='0'});setTimeout(()=>r.remove(),800)});
 
   const grid=document.getElementById('mosaicGrid');
-  if(grid){
-    function shuffle(){const tiles=[...grid.children]; for(let i=tiles.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); if(j!==i) grid.insertBefore(tiles[j],tiles[i]);}}
-    let t=setInterval(shuffle,6000); grid.addEventListener('pointerenter',()=>clearInterval(t)); grid.addEventListener('pointerleave',()=>{t=setInterval(shuffle,6000)});
-  }
+  if(grid){function shuffle(){const tiles=[...grid.children];for(let i=tiles.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));if(j!==i)grid.insertBefore(tiles[j],tiles[i])}}let t=setInterval(shuffle,6000);grid.addEventListener('pointerenter',()=>clearInterval(t));grid.addEventListener('pointerleave',()=>{t=setInterval(shuffle,6000)})}
 
-  /* Updated steps (6) — no "Age" */
+  // UPDATED: New copy + labels
   const steps=[
-    {key:'select',meta:'Step 1 of 6: Sourcing your fruit',title:'Select your grapes',desc:'Choose your varietal and region with our instructors — from California classics to Old World favorites.',src:'https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1759761059622.mp4'},
-    {key:'crush',meta:'Step 2 of 6: Hands-on crush',title:'Crushing the grapes',desc:'Roll up your sleeves and crush with your group — the aromas and energy kick off fermentation.',src:'https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1759761075058.mp4'},
-    {key:'press',meta:'Step 3 of 6: Gentle pressure',title:'Pressing the grapes',desc:'Separate juice from skins and seeds on modern presses for clean flavors and balance.',src:'https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1759761087610.mp4'},
-    {key:'rack',meta:'Step 4 of 6: Clarification',title:'Racking the wine',desc:'Siphon the wine off the lees to clarify and refine — taste how texture starts smoothing out.',src:'https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1759761100903.mp4'},
-    {key:'bottle',meta:'Step 5 of 6: Bottling line',title:'Bottling the wine',desc:'Fill, cork, and cap together — part celebration, part factory line. Camera-ready.',src:'https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1759761112863.mp4'},
-    {key:'label',meta:'Step 6 of 6: Your identity',title:'Applying your custom label',desc:'Design and apply a label that’s uniquely yours — perfect for gifting and events.',src:'https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1759761127886.mp4'}
+    {key:'select',meta:'Step 1 of 6: Choose your varietal',title:'Selecting Your Grapes',desc:'Sample your favorite reds and whites — or discover new blends. Our instructors guide you through selecting grapes from regions like California, Italy, or Chile. Whether you’re after a classic or a once-in-a-lifetime wine, this is where your journey begins.',src:'https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1759761059622.mp4'},
+    {key:'crush',meta:'Step 2 of 6: Start the process',title:'Crushing the Grapes',desc:'No foot stomping here — your grapes are crushed and destemmed by a professional machine that gently separates stems from juice. You’ll watch as your grapes transform into the beginnings of your future wine.',src:'https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1759761075058.mp4'},
+    {key:'press',meta:'Step 3 of 6: Extract the flavor',title:'Pressing the Grapes',desc:'Your free-run juice is pumped into barrels while the rest is gently pressed to release every drop of flavor. This step captures the essence of your chosen varietal and sets the tone for the wine’s body and balance.',src:'https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1759761087610.mp4'},
+    {key:'rack',meta:'Step 4 of 6: Clarify and refine',title:'Racking the Wine',desc:'As fermentation settles, you’ll help siphon your wine off the lees — the spent yeast and grape particles — to clarify it. This stage refines both texture and flavor, revealing the developing personality of your vintage.',src:'https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1759761100903.mp4'},
+    {key:'bottle',meta:'Step 5 of 6: Celebrate your creation',title:'Bottling the Wine',desc:'After months of aging, it’s time to bottle! You’ll fill, cork, and seal your own bottles — a fun, hands-on session that feels part celebration, part assembly line. Gather friends and family to mark the moment.',src:'https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1759761112863.mp4'},
+    {key:'label',meta:'Step 6 of 6: Make it yours',title:'Custom Labeling',desc:'The final touch: your personalized label. Design something that captures your wine’s unique story — bold, elegant, or playful. When you place it on your bottle, your handcrafted vintage officially becomes yours.',src:'https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1759761127886.mp4'}
   ];
-  document.documentElement.style.setProperty('--step-count', steps.length);
-  const labelMap={select:'Select',crush:'Crush',press:'Press',rack:'Rack',bottle:'Bottle',label:'Label'};
+  document.documentElement.style.setProperty('--step-count',steps.length);
+
+  // UPDATED: Full thumbnail labels
+  const labelMap={
+    select:'Selecting Your Grapes',
+    crush:'Crushing the Grapes',
+    press:'Pressing the Grapes',
+    rack:'Racking the Wine',
+    bottle:'Bottling the Wine',
+    label:'Custom Labeling'
+  };
 
   const stageVideo=document.getElementById('stageVideo');
   const metaLine=document.getElementById('metaLine');
@@ -442,90 +340,80 @@
   const playBtn=document.getElementById('playBtn');
   const nextBtn=document.getElementById('nextBtn');
   const thumbs=document.getElementById('thumbs');
-  const modal=document.getElementById('modal');
-  const modalVideo=document.getElementById('modalVideo');
-  const closeModal=document.getElementById('closeModal');
 
-  steps.forEach((s,i)=>{
-    const btn=document.createElement('button');
-    btn.className='thumb'; btn.type='button'; btn.setAttribute('role','tab');
-    btn.setAttribute('aria-selected',i===0?'true':'false'); btn.setAttribute('aria-current',i===0?'true':'false');
-    btn.setAttribute('aria-label',`${labelMap[s.key]} — preview`);
-    const v=document.createElement('video'); v.src=s.src; v.preload='metadata'; v.playsInline=true; v.muted=true; v.autoplay=false; v.loop=false;
-    const lab=document.createElement('div'); lab.className='label'; lab.innerHTML=`<i class="fa fa-play"></i> ${labelMap[s.key]}`;
-    btn.appendChild(v); btn.appendChild(lab); btn.addEventListener('click',()=>setStep(i)); thumbs.appendChild(btn);
-  });
+  steps.forEach((s,i)=>{const btn=document.createElement('button');btn.className='thumb';btn.type='button';btn.setAttribute('role','tab');btn.setAttribute('aria-selected',i===0?'true':'false');btn.setAttribute('aria-current',i===0?'true':'false');btn.setAttribute('aria-label',`${labelMap[s.key]} — preview`);const v=document.createElement('video');v.src=s.src;v.preload='metadata';v.playsInline=true;v.muted=true;v.autoplay=false;v.loop=false;const lab=document.createElement('div');lab.className='label';lab.innerHTML=`<i class="fa fa-play"></i> ${labelMap[s.key]}`;btn.appendChild(v);btn.appendChild(lab);btn.addEventListener('click',()=>{setStep(i);stageVideo.play().catch(()=>{})});thumbs.appendChild(btn)});
 
   let idx=0;
   function setStep(i){
-    idx=(i+steps.length)%steps.length; const s=steps[idx];
-    if(stageVideo.src!==s.src){stageVideo.src=s.src; stageVideo.currentTime=0; stageVideo.play().catch(()=>{});}
-    metaLine.textContent=s.meta; stepTitle.textContent=s.title; stepDesc.textContent=s.desc;
-    if(idx===steps.length-1){nextBtn.textContent='Start Winemaking'; nextBtn.setAttribute('data-link','https://makewinewithus.com/create-account'); nextBtn.setAttribute('aria-label','Start Winemaking');}
-    else{nextBtn.textContent='Next Step'; nextBtn.removeAttribute('data-link'); nextBtn.setAttribute('aria-label','Go to next step');}
-    [...thumbs.querySelectorAll('.thumb')].forEach((t,j)=>t.setAttribute('aria-current',j===idx?'true':'false'));
+    idx=(i+steps.length)%steps.length;const s=steps[idx];
+    if(stageVideo.src!==s.src){
+      stageVideo.src=s.src;
+      stageVideo.currentTime=0;
+      stageVideo.load(); // ensure new source is committed before playing
+    }
+    // Always ensure preview is playing (muted) when step changes
+    stageVideo.muted=true;
+    stageVideo.play().catch(()=>{ /* fallback will retry on loadeddata */ });
+    // Update copy
+    metaLine.textContent=s.meta;stepTitle.textContent=s.title;stepDesc.textContent=s.desc;
+    // CTA state
+    if(idx===steps.length-1){nextBtn.textContent='Start Winemaking';nextBtn.setAttribute('data-link','https://makewinewithus.com/create-account');nextBtn.setAttribute('aria-label','Start Winemaking')}
+    else{nextBtn.textContent='Next Step';nextBtn.removeAttribute('data-link');nextBtn.setAttribute('aria-label','Go to next step')}
+    // Thumb state
+    [...thumbs.querySelectorAll('.thumb')].forEach((t,j)=>t.setAttribute('aria-current',j===idx?'true':'false'))
   }
 
-  playBtn.addEventListener('click',()=>{
-    const s=steps[idx]; modalVideo.src=s.src; modal.style.visibility='visible'; modal.style.opacity='1'; modalVideo.muted=false;
-    modalVideo.play().then(()=>{if(modalVideo.requestFullscreen){modalVideo.requestFullscreen().catch(()=>{});}}).catch(()=>{});
-  });
-  closeModal.addEventListener('click',()=>{
-    modal.style.opacity='0'; modal.style.visibility='hidden';
-    try{if(document.fullscreenElement) document.exitFullscreen();}catch(e){}
-    modalVideo.pause(); modalVideo.src='';
-  });
-  modal.addEventListener('click',(e)=>{if(e.target===modal){closeModal.click();}});
+  // In case autoplay was blocked until meta is ready, try again after data is loaded
+  stageVideo.addEventListener('loadeddata',()=>{ if(stageVideo.muted){ stageVideo.play().catch(()=>{}); } });
 
-  nextBtn.addEventListener('click',()=>{
-    const link=nextBtn.getAttribute('data-link'); if(link){window.location.href=link;} else {setStep(idx+1);}
-  });
+  // Fullscreen helpers (use the SAME video element so playback continues)
+  function enterFullscreenVideo(){
+    const v=stageVideo;
+    v.muted=false; // enable sound in fullscreen
+    v.play().catch(()=>{});
+    if(v.requestFullscreen){v.requestFullscreen().catch(()=>{})}
+    else if(v.webkitEnterFullscreen){try{v.webkitEnterFullscreen()}catch(e){}}
+  }
+  function handleExitToPreview(){
+    // Back to preview state: keep playing, but muted
+    stageVideo.muted=true;
+    stageVideo.play().catch(()=>{});
+  }
+  document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement){handleExitToPreview()}});
+  // iOS Safari fires this on the video element
+  stageVideo.addEventListener('webkitendfullscreen',handleExitToPreview);
 
-  setHeights();
-  setStep(0);
+  playBtn.addEventListener('click',enterFullscreenVideo);
 
-  /* Countdown */
+  nextBtn.addEventListener('click',()=>{const link=nextBtn.getAttribute('data-link');if(link){window.location.href=link}else{setStep(idx+1)}});
+
+  setHeights();setStep(0);
+
   const target=new Date('2025-09-20T13:00:00-04:00');
-  function fmt(n){return String(n).padStart(2,'0');}
-  function tickTimer(){
-    const now=new Date(); let diff=Math.max(0,target-now);
-    const d=Math.floor(diff/86400000); diff-=d*86400000;
-    const h=Math.floor(diff/3600000); diff-=h*3600000;
-    const m=Math.floor(diff/60000); diff-=m*60000;
-    const s=Math.floor(diff/1000);
-    (['d','h','m','s']).forEach((k,i)=>{const val=[d,h,m,s][i]; const el=document.getElementById(k); if(el) el.textContent=fmt(val);});
-  }
-  setInterval(tickTimer,1000); tickTimer();
+  function fmt(n){return String(n).padStart(2,'0')}
+  function tickTimer(){const now=new Date();let diff=Math.max(0,target-now);const d=Math.floor(diff/86400000);diff-=d*86400000;const h=Math.floor(diff/3600000);diff-=h*3600000;const m=Math.floor(diff/60000);diff-=m*60000;const s=Math.floor(diff/1000);(['d','h','m','s']).forEach((k,i)=>{const val=[d,h,m,s][i];const el=document.getElementById(k);if(el)el.textContent=fmt(val)})}
+  setInterval(tickTimer,1000);tickTimer();
 
-  /* Pause non-hero loops */
-  const vids=[...document.querySelectorAll('video')].filter(v=>v!==stageVideo&&v!==modalVideo);
-  const vio=new IntersectionObserver((entries)=>{entries.forEach(en=>{const v=en.target; if(prefersReduced){v.pause();return;} if(en.isIntersecting){if(v.hasAttribute('loop')) v.play().catch(()=>{});} else {v.pause();}});},{threshold:.2});
+  const vids=[...document.querySelectorAll('video')].filter(v=>v!==stageVideo);
+  const vio=new IntersectionObserver((entries)=>{entries.forEach(en=>{const v=en.target;if(prefersReduced){v.pause();return}if(en.isIntersecting){if(v.hasAttribute('loop'))v.play().catch(()=>{})}else{v.pause()}})},{threshold:.2});
   vids.forEach(v=>vio.observe(v));
 
-  /* Quiz helper */
   const res=document.getElementById('qResult');
   const opts=[...document.querySelectorAll('input[name="vibe"]')];
-  opts.forEach(o=>o.addEventListener('change',()=>{const map={bold:'Cabernet, Sangiovese',fruit:'Zinfandel, Barbera',crisp:'Pinot Grigio, Sauvignon Blanc',silky:'Merlot, Pinot Noir'}; if(res) res.textContent='Recommended: '+(map[o.value]||'');}));
+  opts.forEach(o=>o.addEventListener('change',()=>{const map={bold:'Cabernet, Sangiovese',fruit:'Zinfandel, Barbera',crisp:'Pinot Grigio, Sauvignon Blanc',silky:'Merlot, Pinot Noir'};if(res)res.textContent='Recommended: '+(map[o.value]||'')}));
 
-  /* Footer dynamic hours (America/New_York) */
   (function(){
     const tz='America/New_York';
     const schedule=[null,null,{open:[13,0],close:[17,0]},{open:[13,0],close:[18,0]},{open:[13,0],close:[18,0]},{open:[13,0],close:[18,0]},null];
     const dayNames=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-    function getParts(d){
-      const parts=new Intl.DateTimeFormat('en-US',{timeZone:tz,weekday:'short',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(d);
-      const map={}; for(const p of parts) map[p.type]=p.value;
-      const dayIdx=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(map.weekday);
-      return {dayIdx,hour:parseInt(map.hour,10),minute:parseInt(map.minute,10)};
-    }
-    function fmtTime([h,m]){const ampm=h>=12?'PM':'AM'; const h12=((h+11)%12)+1; const mm=String(m).padStart(2,'0'); return `${h12}:${mm} ${ampm}`;}
-    function nextOpenFrom(idx){for(let i=1;i<=7;i++){const n=(idx+i)%7; if(schedule[n]) return {dayIdx:n,opening:schedule[n].open};} return null;}
-    const nowParts=getParts(new Date()); const target=document.querySelector('.hours .hours-value'); if(!target) return;
-    const today=schedule[nowParts.dayIdx]; if(!today){target.textContent='Closed today'; return;}
-    const nowMin=nowParts.hour*60+nowParts.minute; const openMin=today.open[0]*60+today.open[1]; const closeMin=today.close[0]*60+today.close[1];
-    if(nowMin<openMin){target.textContent=`Closed · Opens at ${fmtTime(today.open)}`;}
-    else if(nowMin>=openMin&&nowMin<closeMin){target.textContent=`Open now · Closes at ${fmtTime(today.close)}`;}
-    else {const next=nextOpenFrom(nowParts.dayIdx); if(next){const tomorrowIdx=(nowParts.dayIdx+1)%7; target.textContent= next.dayIdx===tomorrowIdx?`Closed · Opens tomorrow at ${fmtTime(next.opening)}`:`Closed · Opens ${dayNames[next.dayIdx]} at ${fmtTime(next.opening)}`;} else target.textContent='Closed today';}
+    function getParts(d){const parts=new Intl.DateTimeFormat('en-US',{timeZone:tz,weekday:'short',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(d);const map={};for(const p of parts)map[p.type]=p.value;const dayIdx=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(map.weekday);return {dayIdx,hour:parseInt(map.hour,10),minute:parseInt(map.minute,10)}}
+    function fmtTime([h,m]){const ampm=h>=12?'PM':'AM';const h12=((h+11)%12)+1;const mm=String(m).padStart(2,'0');return `${h12}:${mm} ${ampm}`}
+    function nextOpenFrom(idx){for(let i=1;i<=7;i++){const n=(idx+i)%7;if(schedule[n])return {dayIdx:n,opening:schedule[n].open}}return null}
+    const nowParts=getParts(new Date());const tgt=document.querySelector('.hours .hours-value');if(!tgt)return;const today=schedule[nowParts.dayIdx];if(!today){tgt.textContent='Closed today';return}
+    const nowMin=nowParts.hour*60+nowParts.minute;const openMin=today.open[0]*60+today.open[1];const closeMin=today.close[0]*60+today.close[1];
+    if(nowMin<openMin){tgt.textContent=`Closed · Opens at ${fmtTime(today.open)}`}
+    else if(nowMin>=openMin&&nowMin<closeMin){tgt.textContent=`Open now · Closes at ${fmtTime(today.close)}`}
+    else{const next=nextOpenFrom(nowParts.dayIdx);if(next){const tomorrowIdx=(nowParts.dayIdx+1)%7;tgt.textContent=next.dayIdx===tomorrowIdx?`Closed · Opens tomorrow at ${fmtTime(next.opening)}`:`Closed · Opens ${dayNames[next.dayIdx]} at ${fmtTime(next.opening)}`}else tgt.textContent='Closed today'}
   }());
 })();
 </script>
