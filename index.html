@@ -107,39 +107,46 @@ nav{display:flex;align-items:center;justify-content:center}
 .btn.play i{font-size:12px}
 
 /* Thumbnails row */
-/* Thumbnails row — full-bleed, no side gaps */
 .thumbs{
-  position:relative;
-  z-index:2;
-  display:flex;
-  gap:var(--thumb-gap);
-  width:100vw;                               /* full viewport width */
-  margin-left:calc(50% - 50vw);              /* center full-bleed */
-  margin-right:calc(50% - 50vw);
-  padding:12px 0 16px;                        /* no side padding */
+  position:relative;z-index:2;display:flex;gap:var(--thumb-gap);
+  padding:12px 0 16px; /* 4) remove side padding so no left/right gaps */
+  margin:0;
 }
-
 .thumbs-inner{
   display:flex;
-  gap:var(--thumb-gap);
+  gap:2px; /* tightened spacing to kill visible side bars */
   width:100%;
 }
-
 .thumb{
-  position:relative;
-  flex:1 1 0;
-  min-width:0;
-  border-radius:12px;
-  overflow:hidden;
-  border:2px solid transparent;
-  background:#111;
-  cursor:pointer;
+  position:relative;flex:1 1 0;min-width:0;border-radius:12px;overflow:hidden;border:2px solid transparent;background:#111;cursor:pointer;
+  transition:transform .25s ease; /* hover scale */
 }
+/* remove outer rounding so the strip touches viewport edges */
+.thumbs-inner .thumb:first-child{border-top-left-radius:0;border-bottom-left-radius:0}
+.thumbs-inner .thumb:last-child{border-top-right-radius:0;border-bottom-right-radius:0}
 
 .thumb:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 .thumb[aria-current="true"]{border-color:var(--brand)}
 .thumb video{width:100%;aspect-ratio:16/9;object-fit:cover;pointer-events:none;background:#000}
-.thumb .label{position:absolute;left:8px;bottom:8px;background:rgba(255,255,255,.92);color:#111;padding:6px 10px;border-radius:999px;font-weight:800;display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.95);font-size:clamp(11px,1.7vw,13px)}
+
+/* --- UPDATED label style + hover --- */
+.thumb .label{
+  position:absolute;left:8px;bottom:8px;
+  padding:6px 10px;border-radius:999px;font-weight:800;display:flex;align-items:center;gap:8px;
+  font-size:clamp(11px,1.7vw,13px);
+  background:rgba(0,0,0,.35); /* subtle, semi-transparent */
+  color:#fff;
+  border:1px solid rgba(255,255,255,.20);
+  backdrop-filter:saturate(1.1) blur(2px);
+  opacity:.85;
+  transition:opacity .2s ease, background-color .2s ease, filter .2s ease;
+}
+.thumb:hover{ transform:scale(1.05); z-index:1; }
+.thumb:hover .label{
+  opacity:1;
+  background:rgba(0,0,0,.65); /* brighter/clearer on hover */
+  filter:none;
+}
 
 /* Footer */
 .site-footer{background:#111;color:#ddd;font-size:15px;line-height:1.6;padding-top:50px}
@@ -234,7 +241,7 @@ nav{display:flex;align-items:center;justify-content:center}
   <div class="hero-inner" id="heroInner">
     <video id="heroVideo" playsinline muted autoplay loop></video>
     <div class="hero-scrim" aria-hidden="true"></div>
-    <div class="hero-bottom-fade" aria-hidden="true"></div> <!-- 5) bottom fade -->
+    <div class="hero-bottom-fade" aria-hidden="true"></div> <!-- bottom fade -->
 
     <div class="hero-copy">
       <div class="copy-wrap">
@@ -244,7 +251,6 @@ nav{display:flex;align-items:center;justify-content:center}
           Sample your favorite reds and whites — or discover new blends. Our instructors guide you through selecting grapes from regions like California, Italy, or Chile. Whether you’re after a classic or a once-in-a-lifetime wine, this is where your journey begins.
         </p>
         <div class="hero-ctas">
-          <!-- 3) compact Play + new "Plan a Private Event" -->
           <button id="playBtn" class="btn ghost play" type="button" aria-label="Play video with sound">
             <i class="fa fa-play"></i><span>Play</span>
           </button>
@@ -392,11 +398,11 @@ nav{display:flex;align-items:center;justify-content:center}
 
     const lab=document.createElement('div');
     lab.className='label';
-    lab.innerHTML=`<i class="fa fa-play"></i> ${s.title}`;
+    lab.textContent = s.title; /* removed play icon */
 
     btn.appendChild(v);
     btn.appendChild(lab);
-    btn.addEventListener('click', ()=> setStep(i));
+    btn.addEventListener('click', ()=> setStep(i)); /* hover does NOT change hero */
     thumbs.appendChild(btn);
   });
 
