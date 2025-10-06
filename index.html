@@ -370,6 +370,75 @@ nav{display:flex;align-items:center;justify-content:center}
   right:0; background:linear-gradient(270deg,#fff,rgba(255,255,255,0));
 }
 
+/* === Section 4 === */
+#stories{
+  background:#fff;
+  color:var(--ink);
+  width:100%;
+  padding: clamp(28px, 6vw, 64px) 16px;
+}
+#stories .stories-head{
+  text-align:center;
+  margin:0 auto clamp(16px, 3.2vw, 24px);
+  max-width: 900px;
+}
+#stories .stories-title{
+  margin:0 0 6px;
+  font-weight:800;
+  font-size: clamp(18px, 2.6vw, 24px);
+}
+#stories .stories-sub{
+  margin:0;
+  color:var(--muted);
+  font-size: clamp(13px, 1.9vw, 16px);
+}
+
+/* Grid */
+.stories-grid{
+  --card-gap: 16px;
+  --card-h: 62vh;                 /* caps height on tall screens */
+  margin:0 auto;
+  padding:0;
+  list-style:none;
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: var(--card-gap);
+  max-width: 1400px;
+}
+@media (max-width: 1024px){ .stories-grid{ grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 640px){  .stories-grid{ grid-template-columns: 1fr; } }
+
+.story{ display:flex; flex-direction:column; gap:10px; }
+.story-media{
+  position:relative;
+  margin:0;
+  border-radius: 18px;
+  overflow:hidden;
+  box-shadow: var(--shadow-lg);
+  aspect-ratio: 9 / 16;           /* portrait */
+  max-height: var(--card-h);
+}
+.story-video{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:cover;
+  display:block;
+  filter: saturate(1.04) contrast(1.03);
+  transition: transform .25s ease, filter .25s ease;
+}
+.story-media:hover .story-video{
+  transform: scale(1.02);
+  filter: saturate(1.08) contrast(1.05);
+}
+
+.story-cap{
+  margin:0;
+  font-size: clamp(13px, 1.9vw, 15px);
+  line-height:1.4;
+  color:#374151;
+  text-align:center;
+  padding: 0 6px;
+}
 
 
   
@@ -550,6 +619,48 @@ nav{display:flex;align-items:center;justify-content:center}
   </div>
 </section>
 
+<!-- Section 4 -->
+<section id="stories" aria-label="Stories from the cellar">
+  <div class="stories-head">
+    <h2 class="stories-title">Stories from the cellar</h2>
+    <p class="stories-sub">Short clips from people who made their own vintage.</p>
+  </div>
+
+  <ul class="stories-grid" role="list">
+    <li class="story">
+      <figure class="story-media">
+        <video
+          class="story-video"
+          src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1756755199668.mp4"
+          playsinline muted loop preload="metadata" aria-label="Crushing fresh grapes">
+        </video>
+      </figure>
+      <figcaption class="story-cap">“Experience the excitement of crushing fresh grapes — the very first step of winemaking.”</figcaption>
+    </li>
+
+    <li class="story">
+      <figure class="story-media">
+        <video
+          class="story-video"
+          src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1756755209820.mp4"
+          playsinline muted loop preload="metadata" aria-label="Fresh juice flowing out">
+        </video>
+      </figure>
+      <figcaption class="story-cap">“Watch the grapes transform as fresh juice flows out, starting its journey to becoming wine.”</figcaption>
+    </li>
+
+    <li class="story">
+      <figure class="story-media">
+        <video
+          class="story-video"
+          src="https://d34hmiuaex7c0.cloudfront.net/3719/uploads/cmaspages/gallery/galleryitem_1756755761301.mp4"
+          playsinline muted loop preload="metadata" aria-label="Tasting from the barrel">
+        </video>
+      </figure>
+      <figcaption class="story-cap">“Straight from the barrel — tasting wine in its purest form during the aging process.”</figcaption>
+    </li>
+  </ul>
+</section>
 
 
 <!-- Footer (full width, unchanged) -->
@@ -915,7 +1026,27 @@ nav{display:flex;align-items:center;justify-content:center}
   });
 })();
 
-  
+
+(function storiesAutoPlay(){
+  const vids = document.querySelectorAll('#stories .story-video');
+  if(!('IntersectionObserver' in window) || !vids.length){ 
+    // Fallback: best effort play all muted
+    vids.forEach(v => v.play && v.play().catch(()=>{}));
+    return;
+  }
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(({isIntersecting, target})=>{
+      if(isIntersecting){
+        target.play && target.play().catch(()=>{});
+      }else{
+        target.pause && target.pause();
+      }
+    });
+  }, { threshold: 0.25 });
+  vids.forEach(v => io.observe(v));
+})();
+
+
 </script>
 </body>
 </html>
